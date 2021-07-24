@@ -48,7 +48,7 @@ public class MessageListener implements Listener {
                 String uuid = in.readUTF();
                 String messageWithFormat = in.readUTF();
                 String message = in.readUTF();
-
+                boolean colors = in.readBoolean();
 
                 if (groupMemberCommandManager.alreadyToggle(UUID.fromString(uuid))) {
                     int id = groupMemberCommandManager.getGroupByToggle(ProxyServer.getInstance().getPlayer(UUID.fromString(uuid)));
@@ -64,6 +64,7 @@ public class MessageListener implements Listener {
                     for (Map.Entry<String, ServerInfo> entry : plugin.getProxy().getServers().entrySet()) {
                         ByteArrayDataOutput out = ByteStreams.newDataOutput();
                         out.writeUTF(subchannel);
+                        out.writeUTF(uuid);
                         out.writeUTF(messageWithFormat);
                         List<UUID> ignores = new ArrayList<>(ignoreCommandManager.getAreIgnores(UUID.fromString(uuid)));
 
@@ -72,6 +73,7 @@ public class MessageListener implements Listener {
                             uuids = uuid1.toString() + ";";
                         }
                         out.writeUTF(uuids);
+                        out.writeBoolean(colors);
                         entry.getValue().sendData("hc:chatbukkit", out.toByteArray());
                     }
                 }

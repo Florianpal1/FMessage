@@ -2,6 +2,7 @@ package fr.florianpal.hypercraftmessage;
 
 import fr.florianpal.hypercraftmessage.listeners.ChatListener;
 import fr.florianpal.hypercraftmessage.managers.ConfigurationManager;
+import fr.florianpal.hypercraftmessage.managers.VaultIntegrationManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -15,9 +16,12 @@ public class HypercraftMessage extends JavaPlugin {
 
     private ChatListener chatListener;
     private ConfigurationManager configurationManager;
+    private VaultIntegrationManager vaultIntegrationManager;
     @Override
     public void onEnable() {
         configurationManager = new ConfigurationManager(this);
+
+        vaultIntegrationManager = new VaultIntegrationManager(this);
 
         chatListener = new ChatListener(this);
         Bukkit.getPluginManager().registerEvents(chatListener, this);
@@ -87,5 +91,9 @@ public class HypercraftMessage extends JavaPlugin {
 
     public String setPlaceHolders(OfflinePlayer player, String message) {
         return PlaceholderAPI.setPlaceholders(player, message);
+    }
+
+    public VaultIntegrationManager getVaultIntegrationManager() {
+        return vaultIntegrationManager;
     }
 }

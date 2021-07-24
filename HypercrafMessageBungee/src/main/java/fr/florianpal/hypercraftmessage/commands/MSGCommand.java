@@ -3,6 +3,8 @@ package fr.florianpal.hypercraftmessage.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import fr.florianpal.hypercraftmessage.HypercraftMessage;
 import fr.florianpal.hypercraftmessage.languages.MessageKeys;
 import fr.florianpal.hypercraftmessage.managers.commandManagers.CommandManager;
@@ -11,6 +13,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @CommandAlias("m|msg")
@@ -58,6 +62,11 @@ public class MSGCommand extends BaseCommand {
                 }
                 BaseComponent texteTarget = new TextComponent(formatTarget);
 
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("song");
+                out.writeUTF(playerTarget.getUniqueId().toString());
+                playerTarget.sendData("hc:chatbukkit", out.toByteArray());
+
                 playerTarget.sendMessage(texteTarget);
 
                 String formatSender = plugin.getConfigurationManager().getChat().getSenderChatFormat();
@@ -93,6 +102,7 @@ public class MSGCommand extends BaseCommand {
 
                 for (UUID uuid : plugin.getPlayerSpy()) {
                     ProxiedPlayer player = plugin.getProxy().getPlayer(uuid);
+
                     if (player != null) {
                         player.sendMessage(texteSpy);
                     }

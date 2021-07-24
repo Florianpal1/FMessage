@@ -5,10 +5,12 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,24 +34,24 @@ public class ChatListener implements Listener, PluginMessageListener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onChat(AsyncChatEvent e) {
+    public void onChat(AsyncPlayerChatEvent e) {
 
-        int nbr_maj = nbr_maj(e.message().toString());
-        int nbr_min = nbr_min(e.message().toString());
+        int nbr_maj = nbr_maj(e.getMessage());
+        int nbr_min = nbr_min(e.getMessage());
         double result = (double)(nbr_maj)/nbr_min;
 
 
-        if(unflood(e.message().toString())) {
+        if(unflood(e.getMessage())) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.YELLOW + "Votre message contient un flood. Il a été automatiquement supprimé.");
         }
 
         if(!e.isCancelled()) {
-            if(e.message().toString().length() > 3) {
+            if(e.getMessage().length() > 3) {
                 if (result > 1) {
                     e.getPlayer().sendMessage(ChatColor.YELLOW + "Votre message contient trop de majuscules. Il a été automatiquement mit en minuscule.");
 
-                    e.message(Component.text(e.message().toString().toLowerCase()));
+                    e.setMessage(e.getMessage().toLowerCase());
                 }
             }
 
@@ -59,13 +61,15 @@ public class ChatListener implements Listener, PluginMessageListener {
 
             String format = plugin.getConfigurationManager().getChat().getChatFormat();
 
-            format = format.replace("{message}", e.message().toString());
+
+            format = format.replace("{message}", e.getMessage());
             format = format.replace("{displayName}", e.getPlayer().getDisplayName());
 
             format = plugin.setPlaceHolders(e.getPlayer(), format);
 
             out.writeUTF(format);
-            out.writeUTF(e.message().toString());
+            out.writeUTF("" + e.getMessage());
+            out.writeBoolean(plugin.getVaultIntegrationManager().getPerms().has(e.getPlayer(), "hcm.colors"));
             e.getPlayer().sendPluginMessage(plugin, "hc:chatbungee", out.toByteArray());
 
             e.setCancelled(true);
@@ -136,20 +140,32 @@ public class ChatListener implements Listener, PluginMessageListener {
                     }
                 }
 
+                boolean colors = in.readBoolean();
+
                 plugin.getLogger().info(messageRecieved);
                 for(Player player1 : plugin.getServer().getOnlinePlayers()) {
                     if(!ignores.contains(player1.getUniqueId())) {
-                        player1.sendMessage(messageRecieved);
+                        if(colors) {
+                            player1.sendMessage(format(messageRecieved));
+                        } else {
+                            player1.sendMessage(messageRecieved);
+                        }
+
                     } else {
                         player1.sendMessage(format(plugin.getConfigurationManager().getChat().getIgnoreFormat()));
                     }
                 }
+            } else if(subchannel.equalsIgnoreCase("song")) {
+                String uuid = in.readUTF();
+
+                Sound sound = Sound.sound(Key.key("entity.wither.death"), Sound.Source.MUSIC, 1f, 1f);
+                Bukkit.getPlayer(UUID.fromString(uuid)).playSound(sound);
             }
         }
     }
     private String format(String msg) {
         Pattern pattern = Pattern.compile("[{]#[a-fA-F0-9]{6}[}]");
-        if (Bukkit.getVersion().contains("1.16")) {
+        if (Bukkit.getVersion().contains("1.16") || Bukkit.getVersion().contains("1.17")) {
             Matcher match = pattern.matcher(msg);
             while (match.find()) {
 
