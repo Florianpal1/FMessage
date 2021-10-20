@@ -8,9 +8,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="HypercraftMessageBukkit" />
         <module name="HypercrafMessageBungee" />
+        <module name="FMessageBungee" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="FMessageBungee" target="1.8" />
       <module name="HypercrafMessageBungee" target="1.8" />
       <module name="HypercraftMessageBukkit" target="16" />
     </bytecodeTargetLevel>

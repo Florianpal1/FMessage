@@ -1,9 +1,9 @@
-package fr.florianpal.hypercraftmessage.managers.commandManagers;
+package fr.florianpal.fmessage.managers.commandManagers;
 
 
 import co.aikar.commands.BungeeCommandCompletionContext;
 import co.aikar.commands.CommandCompletions;
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
+import fr.florianpal.fmessage.HypercraftMessage;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.util.stream.Collectors;

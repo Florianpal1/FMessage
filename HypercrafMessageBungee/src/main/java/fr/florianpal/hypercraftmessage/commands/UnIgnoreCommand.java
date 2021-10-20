@@ -1,12 +1,12 @@
-package fr.florianpal.hypercraftmessage.commands;
+package fr.florianpal.fmessage.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import fr.florianpal.hypercraftmessage.languages.MessageKeys;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.CommandManager;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.IgnoreCommandManager;
+import fr.florianpal.fmessage.HypercraftMessage;
+import fr.florianpal.fmessage.languages.MessageKeys;
+import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
+import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;

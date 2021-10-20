@@ -1,4 +1,4 @@
-package fr.florianpal.hypercraftmessage.configurations;
+package fr.florianpal.fmessage.configurations;
 
 
 import net.md_5.bungee.config.Configuration;

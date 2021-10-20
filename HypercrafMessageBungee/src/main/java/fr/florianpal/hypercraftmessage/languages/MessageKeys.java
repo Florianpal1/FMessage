@@ -1,4 +1,4 @@
-package fr.florianpal.hypercraftmessage.languages;
+package fr.florianpal.fmessage.languages;
 
 
 import co.aikar.locales.MessageKey;

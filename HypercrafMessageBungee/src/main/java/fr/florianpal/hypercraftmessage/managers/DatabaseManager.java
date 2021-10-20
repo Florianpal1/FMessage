@@ -1,9 +1,9 @@
-package fr.florianpal.hypercraftmessage.managers;
+package fr.florianpal.fmessage.managers;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import fr.florianpal.hypercraftmessage.IDatabaseTable;
+import fr.florianpal.fmessage.HypercraftMessage;
+import fr.florianpal.fmessage.IDatabaseTable;
 
 import java.sql.*;
 import java.util.ArrayList;

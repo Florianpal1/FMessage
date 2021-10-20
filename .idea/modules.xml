@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/FMessageBungee/FMessageBungee.iml" filepath="$PROJECT_DIR$/FMessageBungee/FMessageBungee.iml" />
       <module fileurl="file://$PROJECT_DIR$/HypercrafMessageBungee/HypercrafMessageBungee.iml" filepath="$PROJECT_DIR$/HypercrafMessageBungee/HypercrafMessageBungee.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/HypercraftMessage.iml" filepath="$PROJECT_DIR$/.idea/HypercraftMessage.iml" />
-      <module fileurl="file://$PROJECT_DIR$/HypercraftMessageBukkit/HypercraftMessageBukkit.iml" filepath="$PROJECT_DIR$/HypercraftMessageBukkit/HypercraftMessageBukkit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FMessageBukkit/HypercraftMessageBukkit.iml" filepath="$PROJECT_DIR$/FMessageBukkit/HypercraftMessageBukkit.iml" />
     </modules>
   </component>
 </project>

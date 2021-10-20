@@ -1,4 +1,4 @@
-package fr.florianpal.hypercraftmessage.managers.commandManagers;
+package fr.florianpal.fmessage.managers.commandManagers;
 
 import co.aikar.commands.BungeeCommandManager;
 import co.aikar.commands.MessageType;

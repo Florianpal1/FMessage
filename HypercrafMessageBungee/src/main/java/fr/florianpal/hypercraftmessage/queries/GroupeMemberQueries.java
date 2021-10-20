@@ -1,10 +1,10 @@
-package fr.florianpal.hypercraftmessage.queries;
+package fr.florianpal.fmessage.queries;
 
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import fr.florianpal.hypercraftmessage.IDatabaseTable;
-import fr.florianpal.hypercraftmessage.managers.DatabaseManager;
-import fr.florianpal.hypercraftmessage.objects.Group;
-import fr.florianpal.hypercraftmessage.objects.Member;
+import fr.florianpal.fmessage.HypercraftMessage;
+import fr.florianpal.fmessage.IDatabaseTable;
+import fr.florianpal.fmessage.managers.DatabaseManager;
+import fr.florianpal.fmessage.objects.Group;
+import fr.florianpal.fmessage.objects.Member;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;

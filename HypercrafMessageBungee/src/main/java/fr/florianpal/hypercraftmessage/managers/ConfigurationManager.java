@@ -1,8 +1,8 @@
-package fr.florianpal.hypercraftmessage.managers;
+package fr.florianpal.fmessage.managers;
 
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import fr.florianpal.hypercraftmessage.configurations.ChatConfig;
-import fr.florianpal.hypercraftmessage.configurations.DatabaseConfig;
+import fr.florianpal.fmessage.HypercraftMessage;
+import fr.florianpal.fmessage.configurations.ChatConfig;
+import fr.florianpal.fmessage.configurations.DatabaseConfig;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;

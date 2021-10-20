@@ -1,9 +1,9 @@
-package fr.florianpal.hypercraftmessage.managers.commandManagers;
+package fr.florianpal.fmessage.managers.commandManagers;
 
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import fr.florianpal.hypercraftmessage.objects.Group;
-import fr.florianpal.hypercraftmessage.queries.GroupeQueries;
-import fr.florianpal.hypercraftmessage.queries.IgnoreQueries;
+import fr.florianpal.fmessage.HypercraftMessage;
+import fr.florianpal.fmessage.objects.Group;
+import fr.florianpal.fmessage.queries.GroupeQueries;
+import fr.florianpal.fmessage.queries.IgnoreQueries;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.List;

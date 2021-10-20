@@ -1,15 +1,15 @@
-package fr.florianpal.hypercraftmessage.managers;
+package fr.florianpal.fmessage.managers;
 
 import co.aikar.commands.CommandIssuer;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import fr.florianpal.hypercraftmessage.languages.MessageKeys;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.CommandManager;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.GroupMemberCommandManager;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.IgnoreCommandManager;
-import fr.florianpal.hypercraftmessage.objects.Member;
+import fr.florianpal.fmessage.HypercraftMessage;
+import fr.florianpal.fmessage.languages.MessageKeys;
+import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
+import fr.florianpal.fmessage.managers.commandManagers.GroupMemberCommandManager;
+import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
+import fr.florianpal.fmessage.objects.Member;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

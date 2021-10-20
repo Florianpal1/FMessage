@@ -1,4 +1,4 @@
-package fr.florianpal.hypercraftmessage.commands;
+package fr.florianpal.fmessage.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
@@ -6,9 +6,9 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import fr.florianpal.hypercraftmessage.languages.MessageKeys;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.CommandManager;
+import fr.florianpal.fmessage.HypercraftMessage;
+import fr.florianpal.fmessage.languages.MessageKeys;
+import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("chatspy")

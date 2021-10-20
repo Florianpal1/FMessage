@@ -5,6 +5,8 @@
       <list>
         <option value="$PROJECT_DIR$/HypercraftMessageBukkit/pom.xml" />
         <option value="$PROJECT_DIR$/HypercrafMessageBungee/pom.xml" />
+        <option value="$PROJECT_DIR$/FMessageBukkit/pom.xml" />
+        <option value="$PROJECT_DIR$/FMessageBungee/pom.xml" />
       </list>
     </option>
   </component>

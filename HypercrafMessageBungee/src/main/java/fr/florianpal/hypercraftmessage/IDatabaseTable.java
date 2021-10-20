@@ -1,4 +1,4 @@
-package fr.florianpal.hypercraftmessage;
+package fr.florianpal.fmessage;
 
 public interface IDatabaseTable {
     String[] getTable();

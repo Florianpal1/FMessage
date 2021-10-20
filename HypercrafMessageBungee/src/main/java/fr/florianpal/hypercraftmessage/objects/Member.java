@@ -1,4 +1,4 @@
-package fr.florianpal.hypercraftmessage.objects;
+package fr.florianpal.fmessage.objects;
 
 import java.util.UUID;
 

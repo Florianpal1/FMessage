@@ -1,14 +1,14 @@
-package fr.florianpal.hypercraftmessage;
+package fr.florianpal.fmessage;
 
-import fr.florianpal.hypercraftmessage.commands.*;
-import fr.florianpal.hypercraftmessage.managers.ConfigurationManager;
-import fr.florianpal.hypercraftmessage.managers.DatabaseManager;
-import fr.florianpal.hypercraftmessage.managers.MessageListener;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.*;
-import fr.florianpal.hypercraftmessage.objects.Group;
-import fr.florianpal.hypercraftmessage.queries.GroupeMemberQueries;
-import fr.florianpal.hypercraftmessage.queries.GroupeQueries;
-import fr.florianpal.hypercraftmessage.queries.IgnoreQueries;
+import fr.florianpal.fmessage.commands.*;
+import fr.florianpal.fmessage.managers.ConfigurationManager;
+import fr.florianpal.fmessage.managers.DatabaseManager;
+import fr.florianpal.fmessage.managers.MessageListener;
+import fr.florianpal.fmessage.managers.commandManagers.*;
+import fr.florianpal.fmessage.objects.Group;
+import fr.florianpal.fmessage.queries.GroupeMemberQueries;
+import fr.florianpal.fmessage.queries.GroupeQueries;
+import fr.florianpal.fmessage.queries.IgnoreQueries;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

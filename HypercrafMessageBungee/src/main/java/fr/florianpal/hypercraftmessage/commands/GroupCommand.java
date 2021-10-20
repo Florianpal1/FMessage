@@ -1,15 +1,15 @@
-package fr.florianpal.hypercraftmessage.commands;
+package fr.florianpal.fmessage.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import fr.florianpal.hypercraftmessage.HypercraftMessage;
-import fr.florianpal.hypercraftmessage.languages.MessageKeys;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.CommandManager;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.GroupCommandManager;
-import fr.florianpal.hypercraftmessage.managers.commandManagers.GroupMemberCommandManager;
-import fr.florianpal.hypercraftmessage.objects.Group;
-import fr.florianpal.hypercraftmessage.objects.Member;
+import fr.florianpal.fmessage.HypercraftMessage;
+import fr.florianpal.fmessage.languages.MessageKeys;
+import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
+import fr.florianpal.fmessage.managers.commandManagers.GroupCommandManager;
+import fr.florianpal.fmessage.managers.commandManagers.GroupMemberCommandManager;
+import fr.florianpal.fmessage.objects.Group;
+import fr.florianpal.fmessage.objects.Member;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("group")
