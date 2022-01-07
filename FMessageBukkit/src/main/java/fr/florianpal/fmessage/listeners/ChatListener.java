@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 public class ChatListener implements Listener, PluginMessageListener {
 
-    private FMessage plugin;
+    private final FMessage plugin;
     public ChatListener(FMessage plugin) {
         this.plugin = plugin;
 

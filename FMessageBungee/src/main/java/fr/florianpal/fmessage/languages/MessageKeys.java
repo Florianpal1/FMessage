@@ -43,7 +43,7 @@ public enum MessageKeys implements MessageKeyProvider {
 
     IGNORE_NOT_EXIST;
 
-    private static final String PREFIX = "hypercraft";
+    private static final String PREFIX = "fmessage";
 
     private final MessageKey key = MessageKey.of(PREFIX + "." + this.name().toLowerCase());
 

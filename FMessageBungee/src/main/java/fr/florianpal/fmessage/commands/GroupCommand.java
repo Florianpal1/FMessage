@@ -15,10 +15,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 @CommandAlias("group")
 public class GroupCommand extends BaseCommand {
 
-    private FMessage plugin;
-    private CommandManager commandManager;
-    private GroupCommandManager groupCommandManager;
-    private GroupMemberCommandManager groupMemberCommandManager;
+    private final FMessage plugin;
+    private final CommandManager commandManager;
+    private final GroupCommandManager groupCommandManager;
+    private final GroupMemberCommandManager groupMemberCommandManager;
 
     public GroupCommand(FMessage plugin) {
         this.plugin = plugin;
@@ -28,8 +28,8 @@ public class GroupCommand extends BaseCommand {
     }
 
     @Subcommand("create")
-    @CommandPermission("hc.group.create")
-    @Description("{@@hypercraft.group_create_help_description}")
+    @CommandPermission("fmessage.group.create")
+    @Description("{@@fmessage.group_create_help_description}")
     public void onCreate(ProxiedPlayer playerSender, String groupName) {
         if(groupCommandManager.groupExist(playerSender, groupName)) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
@@ -45,8 +45,8 @@ public class GroupCommand extends BaseCommand {
     }
 
     @Subcommand("remove")
-    @CommandPermission("hc.group.remove")
-    @Description("{@@hypercraft.group_create_help_description}")
+    @CommandPermission("fmessage.group.remove")
+    @Description("{@@fmessage.group_create_help_description}")
     public void onRemove(ProxiedPlayer playerSender, String groupName) {
         if(groupCommandManager.groupExist(playerSender, groupName)) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
@@ -62,8 +62,8 @@ public class GroupCommand extends BaseCommand {
     }
 
     @Subcommand("member add")
-    @CommandPermission("hc.group.member.add")
-    @Description("{@@hypercraft.group_member_create_help_description}")
+    @CommandPermission("fmessage.group.member.add")
+    @Description("{@@fmessage.group_member_create_help_description}")
     public void onAddMember(ProxiedPlayer playerSender, String groupName, String playerTargetName) {
         ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(playerTargetName);
 
@@ -91,8 +91,8 @@ public class GroupCommand extends BaseCommand {
     }
 
     @Subcommand("member kick")
-    @CommandPermission("hc.group.member.kick")
-    @Description("{@@hypercraft.group_member_kickv_help_description}")
+    @CommandPermission("fmessage.group.member.kick")
+    @Description("{@@fmessage.group_member_kickv_help_description}")
     public void onRemoveMember(ProxiedPlayer playerSender, String groupName, String playerTargetName) {
         ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(playerTargetName);
         if(playerTarget != null) {
@@ -118,8 +118,8 @@ public class GroupCommand extends BaseCommand {
     }
 
     @Subcommand("msg")
-    @CommandPermission("hc.group.msg")
-    @Description("{@@hypercraft.group_msg_help_description}")
+    @CommandPermission("fmessage.group.msg")
+    @Description("{@@fmessage.group_msg_help_description}")
     public void onMSG(ProxiedPlayer playerSender, String groupName, String message) {
         if (groupCommandManager.groupExist(groupName)) {
             int id_group = groupCommandManager.getGroupId(groupName);
@@ -143,8 +143,8 @@ public class GroupCommand extends BaseCommand {
     }
 
     @Subcommand("toggle")
-    @CommandPermission("hc.group.toggle")
-    @Description("{@@hypercraft.group_toggle_help_description}")
+    @CommandPermission("fmessage.group.toggle")
+    @Description("{@@fmessage.group_toggle_help_description}")
     public void onToggle(ProxiedPlayer playerSender, String groupName) {
         if (groupCommandManager.groupExist(groupName)) {
             int id_group = groupCommandManager.getGroupId(groupName);

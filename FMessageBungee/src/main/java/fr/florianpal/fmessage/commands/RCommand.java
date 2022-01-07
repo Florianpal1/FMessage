@@ -17,8 +17,8 @@ import java.util.UUID;
 
 @CommandAlias("r")
 public class RCommand extends BaseCommand {
-    private FMessage plugin;
-    private CommandManager commandManager;
+    private final FMessage plugin;
+    private final CommandManager commandManager;
 
     public RCommand(FMessage plugin) {
         this.plugin = plugin;
@@ -26,8 +26,8 @@ public class RCommand extends BaseCommand {
     }
 
     @Default
-    @CommandPermission("hc.r")
-    @Description("{@@hypercraft.r_help_description}")
+    @CommandPermission("fmessage.r")
+    @Description("{@@fmessage.r_help_description}")
     public void onR(ProxiedPlayer playerSender, String message){
         if(!plugin.havePreviousPlayer(playerSender)) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);

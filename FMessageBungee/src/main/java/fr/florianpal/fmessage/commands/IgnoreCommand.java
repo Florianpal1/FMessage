@@ -12,9 +12,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 @CommandAlias("ignore")
 public class IgnoreCommand extends BaseCommand {
 
-    private FMessage plugin;
-    private CommandManager commandManager;
-    private IgnoreCommandManager ignoreCommandManager;
+    private final FMessage plugin;
+    private final CommandManager commandManager;
+    private final IgnoreCommandManager ignoreCommandManager;
 
     public IgnoreCommand(FMessage plugin) {
         this.plugin = plugin;
@@ -23,8 +23,8 @@ public class IgnoreCommand extends BaseCommand {
     }
 
     @Default
-    @CommandPermission("hc.ignore")
-    @Description("{@@hypercraft.ignore_help_description}")
+    @CommandPermission("fmessage.ignore")
+    @Description("{@@fmessage.ignore_help_description}")
     @CommandCompletion("@players")
     public void onIgnore(ProxiedPlayer playerSender, String playerTargetName) {
         ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(playerTargetName);

@@ -14,9 +14,9 @@ import java.util.UUID;
 @CommandAlias("unignore")
 public class UnIgnoreCommand extends BaseCommand {
 
-    private FMessage plugin;
-    private CommandManager commandManager;
-    private IgnoreCommandManager ignoreCommandManager;
+    private final FMessage plugin;
+    private final CommandManager commandManager;
+    private final IgnoreCommandManager ignoreCommandManager;
 
     public UnIgnoreCommand(FMessage plugin) {
         this.plugin = plugin;
@@ -25,13 +25,10 @@ public class UnIgnoreCommand extends BaseCommand {
     }
 
     @Default
-    @CommandPermission("hc.unignore")
-    @Description("{@@hypercraft.unignore_help_description}")
+    @CommandPermission("fmessage.unignore")
+    @Description("{@@fmessage.unignore_help_description}")
     @CommandCompletion("@players")
     public void onUnIgnore(ProxiedPlayer playerSender, String playerTargetName) {
-
-
-
         ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(playerTargetName);
         if(playerTarget != null) {
             if(ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {

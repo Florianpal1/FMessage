@@ -19,7 +19,7 @@ public class IgnoreQueries implements IDatabaseTable {
     private static final String ADD_IGNORE = "INSERT INTO hcm_ignores (playerSenderUuid, playerTargetUuid) VALUES(?,?)";
     private static final String REMOVE_IGNORE = "DELETE FROM hcm_ignores WHERE playerSenderUuid=? and playerTargetUuid=?";
 
-    private DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
 
     public IgnoreQueries(FMessage plugin) {
         this.databaseManager = plugin.getDatabaseManager();

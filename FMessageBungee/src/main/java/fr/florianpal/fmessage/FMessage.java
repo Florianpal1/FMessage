@@ -38,8 +38,8 @@ public class FMessage extends Plugin {
 
     private Map<Integer,Group> groups = new HashMap<>();
     private Map<UUID, List<UUID>> ignores = new HashMap<>();
-    private Map<UUID, UUID> playerMessage = new HashMap<>();
-    private List<UUID> playerSpy = new ArrayList<>();
+    private final Map<UUID, UUID> playerMessage = new HashMap<>();
+    private final List<UUID> playerSpy = new ArrayList<>();
 
     @Override
     public void onEnable() {

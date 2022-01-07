@@ -30,7 +30,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
     private static final String REMOVE_GROUP = "DELETE FROM hcm_groupMembers WHERE id_group=?";
     private static final String UPDATE_GROUP_MEMBER_TOGGLE = "UPDATE hcm_groupMembers SET toggle=? WHERE id_group=? and playerMemberUuid=?";
 
-    private DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
 
     public GroupeMemberQueries(FMessage plugin) {
         this.databaseManager = plugin.getDatabaseManager();

@@ -1,0 +1,2 @@
+chatFormat: "&7{displayName}&7: &r{message}"
+ignoreFormat: "&7Ceci est un message que vous avez décidé d'ignorer."

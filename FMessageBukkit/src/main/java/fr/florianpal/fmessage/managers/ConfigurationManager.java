@@ -8,11 +8,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 
 public class ConfigurationManager {
-    private FMessage core;
+    private final FMessage core;
 
-    private ChatConfig chat = new ChatConfig();
-    private File chatFile;
-    private FileConfiguration chatConfig;
+    private final ChatConfig chat = new ChatConfig();
+    private final File chatFile;
+    private final FileConfiguration chatConfig;
 
     public ConfigurationManager(FMessage core) {
         this.core = core;

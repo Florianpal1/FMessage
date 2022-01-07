@@ -13,8 +13,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("chatspy")
 public class MSGSpyCommand extends BaseCommand {
-    private FMessage plugin;
-    private CommandManager commandManager;
+    private final FMessage plugin;
+    private final CommandManager commandManager;
 
     public MSGSpyCommand(FMessage plugin) {
         this.plugin = plugin;
@@ -22,8 +22,8 @@ public class MSGSpyCommand extends BaseCommand {
     }
 
     @Default
-    @CommandPermission("hc.chatspy")
-    @Description("{@@hypercraft.msgspy_help_description}")
+    @CommandPermission("fmessage.chatspy")
+    @Description("{@@fmessage.msgspy_help_description}")
     public void onMSGSpy(ProxiedPlayer playerSender) {
         CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
         if(plugin.isPlayerSpy(playerSender.getUniqueId())) {

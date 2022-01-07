@@ -17,9 +17,9 @@ import java.util.UUID;
 
 @CommandAlias("m|msg")
 public class MSGCommand extends BaseCommand {
-    private FMessage plugin;
-    private CommandManager commandManager;
-    private IgnoreCommandManager ignoreCommandManager;
+    private final FMessage plugin;
+    private final CommandManager commandManager;
+    private final IgnoreCommandManager ignoreCommandManager;
 
     public MSGCommand(FMessage plugin) {
         this.plugin = plugin;
@@ -28,8 +28,8 @@ public class MSGCommand extends BaseCommand {
     }
 
     @Default
-    @CommandPermission("hc.msg")
-    @Description("{@@hypercraft.msg_help_description}")
+    @CommandPermission("fmessage.msg")
+    @Description("{@@fmessage.msg_help_description}")
     @CommandCompletion("@players")
     public void onMSG(ProxiedPlayer playerSender, String playerTargetName, String message) {
 

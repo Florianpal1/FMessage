@@ -21,7 +21,7 @@ public class GroupeQueries implements IDatabaseTable {
     private static final String ADD_GROUP = "INSERT INTO hcm_groups (playerOwnerUuid, name) VALUES(?,?)";
     private static final String REMOVE_GROUP = "DELETE FROM hcm_groups WHERE id=?";
 
-    private DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
 
     public GroupeQueries(FMessage plugin) {
         this.databaseManager = plugin.getDatabaseManager();
