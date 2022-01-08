@@ -67,7 +67,7 @@ public class ChatListener implements Listener, PluginMessageListener {
 
             out.writeUTF(format);
             out.writeUTF("" + e.getMessage());
-            out.writeBoolean(plugin.getVaultIntegrationManager().getPerms().has(e.getPlayer(), "hcm.colors"));
+            out.writeBoolean(plugin.getVaultIntegrationManager().getPerms().has(e.getPlayer(), "fmessage.colors"));
             e.getPlayer().sendPluginMessage(plugin, "hc:chatbungee", out.toByteArray());
 
             e.setCancelled(true);
