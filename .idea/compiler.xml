@@ -6,15 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="HypercraftMessageBukkit" />
-        <module name="HypercrafMessageBungee" />
+        <module name="FMessageBukkit" />
         <module name="FMessageBungee" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="FMessageBukkit" target="16" />
       <module name="FMessageBungee" target="1.8" />
-      <module name="HypercrafMessageBungee" target="1.8" />
-      <module name="HypercraftMessageBukkit" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>
