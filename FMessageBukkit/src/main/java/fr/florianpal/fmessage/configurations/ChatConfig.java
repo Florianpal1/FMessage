@@ -22,9 +22,14 @@ import org.bukkit.configuration.Configuration;
 public class ChatConfig {
     private String chatFormat;
     private String ignoreFormat;
+    private String floodFormat;
+    private String spamFormat;
+
     public void load(Configuration config) {
         chatFormat = config.getString("chatFormat");
         ignoreFormat = config.getString("ignoreFormat");
+        floodFormat = config.getString("floodFormat");
+        spamFormat = config.getString("spamFormat");
     }
 
     public String getChatFormat() {
@@ -33,5 +38,13 @@ public class ChatConfig {
 
     public String getIgnoreFormat() {
         return ignoreFormat;
+    }
+
+    public String getFloodFormat() {
+        return floodFormat;
+    }
+
+    public String getSpamFormat() {
+        return spamFormat;
     }
 }

@@ -56,13 +56,13 @@ public class ChatListener implements Listener, PluginMessageListener {
 
         if(unflood(e.getMessage())) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage(ChatColor.YELLOW + "Votre message contient un flood. Il a été automatiquement supprimé.");
+            e.getPlayer().sendMessage(plugin.getConfigurationManager().getChat().getFloodFormat());
         }
 
         if(!e.isCancelled()) {
             if(e.getMessage().length() > 3) {
                 if (result > 1) {
-                    e.getPlayer().sendMessage(ChatColor.YELLOW + "Votre message contient trop de majuscules. Il a été automatiquement mit en minuscule.");
+                    e.getPlayer().sendMessage(plugin.getConfigurationManager().getChat().getSpamFormat());
 
                     e.setMessage(e.getMessage().toLowerCase());
                 }
