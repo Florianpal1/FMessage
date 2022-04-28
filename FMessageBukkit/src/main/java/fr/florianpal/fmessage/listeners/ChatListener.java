@@ -83,7 +83,7 @@ public class ChatListener implements Listener, PluginMessageListener {
             out.writeUTF(format);
             out.writeUTF("" + e.getMessage());
             out.writeBoolean(plugin.getVaultIntegrationManager().getPerms().has(e.getPlayer(), "fmessage.colors"));
-            e.getPlayer().sendPluginMessage(plugin, "hc:chatbungee", out.toByteArray());
+            e.getPlayer().sendPluginMessage(plugin, "fmessage:chatbungee", out.toByteArray());
 
             e.setCancelled(true);
         }
@@ -135,7 +135,7 @@ public class ChatListener implements Listener, PluginMessageListener {
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
 
-        if (channel.equalsIgnoreCase("hc:chatbukkit")) {
+        if (channel.equalsIgnoreCase("fmessage:chatbukkit")) {
 
             ByteArrayDataInput in = ByteStreams.newDataInput(message);
             String subchannel = in.readUTF();

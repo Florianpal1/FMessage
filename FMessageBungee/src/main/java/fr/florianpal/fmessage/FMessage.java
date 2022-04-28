@@ -83,8 +83,8 @@ public class FMessage extends Plugin {
         commandManager = new CommandManager(this);
         commandManager.registerDependency(ConfigurationManager.class, configurationManager);
 
-        getProxy().registerChannel("hc:chatbukkit");
-        getProxy().registerChannel("hc:chatbungee");
+        getProxy().registerChannel("fmessage:chatbukkit");
+        getProxy().registerChannel("fmessage:chatbungee");
         ProxyServer.getInstance().getPluginManager().registerListener(this, new MessageListener(this));
 
         commandCompletionsManager = new CommandCompletionsManager(this);
@@ -103,7 +103,7 @@ public class FMessage extends Plugin {
             groupMemberCommandManager.setGroupsMembers(group.getValue());
         }
 
-        getLogger().info("HypercraftMessage enabled");
+        getLogger().info("FMessage enabled");
     }
 
     public void createDefaultConfiguration(File actual, String defaultName) {
@@ -155,8 +155,6 @@ public class FMessage extends Plugin {
                 }
             }
         }
-
-
     }
 
     public ConfigurationManager getConfigurationManager() {
