@@ -46,7 +46,7 @@ public class IgnoreCommand extends BaseCommand {
         ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(playerTargetName);
 
         if(playerTarget != null) {
-            if(playerTarget.hasPermission("hc.cannot_ignore")) {
+            if(playerTarget.hasPermission("fmessage.cannot_ignore")) {
                 CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
                 issuerTarget.sendInfo(MessageKeys.CANNOT_IGNORE);
             } else if(ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {

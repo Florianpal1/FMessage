@@ -72,7 +72,7 @@ public class MSGCommand extends BaseCommand {
 
                 formatTarget = formatTarget.replace("{message}", message);
 
-                if (playerSender.hasPermission("hc.colors")) {
+                if (playerSender.hasPermission("fmessage.colors")) {
                     formatTarget = plugin.format(formatTarget);
                 }
                 BaseComponent texteTarget = new TextComponent(formatTarget);
@@ -80,7 +80,7 @@ public class MSGCommand extends BaseCommand {
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("song");
                 out.writeUTF(playerTarget.getUniqueId().toString());
-                playerTarget.sendData("hc:chatbukkit", out.toByteArray());
+                playerTarget.sendData("fmessage:chatbukkit", out.toByteArray());
 
                 playerTarget.sendMessage(texteTarget);
 
@@ -91,7 +91,7 @@ public class MSGCommand extends BaseCommand {
                 formatSender = plugin.format(formatSender);
 
                 formatSender = formatSender.replace("{message}", message);
-                if (playerSender.hasPermission("hc.colors")) {
+                if (playerSender.hasPermission("fmessage.colors")) {
                     formatSender = plugin.format(formatSender);
                 }
                 BaseComponent texteSender = new TextComponent(formatSender);
@@ -108,7 +108,7 @@ public class MSGCommand extends BaseCommand {
 
                 formatSpy = formatSpy.replace("{message}", message);
 
-                if (playerSender.hasPermission("hc.colors")) {
+                if (playerSender.hasPermission("fmessage.colors")) {
                     formatSpy = plugin.format(formatSpy);
                 }
                 BaseComponent texteSpy = new TextComponent(formatSpy);

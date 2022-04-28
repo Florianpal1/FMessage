@@ -62,7 +62,7 @@ public class RCommand extends BaseCommand {
             formatTarget = plugin.format(formatTarget);
 
             formatTarget = formatTarget.replace("{message}", message);
-            if(playerSender.hasPermission("hc.colors")) {
+            if(playerSender.hasPermission("fmessage.colors")) {
                 formatTarget = plugin.format(formatTarget);
             }
             BaseComponent texteTarget = new TextComponent(formatTarget);
@@ -75,7 +75,7 @@ public class RCommand extends BaseCommand {
             formatSender = plugin.format(formatSender);
 
             formatSender = formatSender.replace("{message}", message);
-            if(playerSender.hasPermission("hc.colors")) {
+            if(playerSender.hasPermission("fmessage.colors")) {
                 formatSender = plugin.format(formatSender);
             }
             BaseComponent texteSender = new TextComponent(formatSender);
@@ -89,7 +89,7 @@ public class RCommand extends BaseCommand {
 
             formatSpy = formatSpy.replace("{message}", message);
 
-            if(playerSender.hasPermission("hc.colors")) {
+            if(playerSender.hasPermission("fmessage.colors")) {
                 formatSpy = plugin.format(formatSpy);
             }
             BaseComponent texteSpy = new TextComponent(formatSpy);
