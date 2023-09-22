@@ -141,8 +141,8 @@ public class ChatListener implements Listener, PluginMessageListener {
             String subchannel = in.readUTF();
 
             if (subchannel.equalsIgnoreCase("Message")) {
+                String playerUUID = in.readUTF();
                 String messageRecieved = in.readUTF();
-                messageRecieved = format(messageRecieved);
 
                 String[] uuids = in.readUTF().split(";");
                 List<UUID> ignores = new ArrayList<UUID>();
@@ -155,7 +155,7 @@ public class ChatListener implements Listener, PluginMessageListener {
 
                 boolean colors = in.readBoolean();
 
-                plugin.getLogger().info(messageRecieved);
+                plugin.getLogger().info(format(messageRecieved));
                 for(Player player1 : plugin.getServer().getOnlinePlayers()) {
                     if(!ignores.contains(player1.getUniqueId())) {
                         if(colors) {
@@ -166,6 +166,17 @@ public class ChatListener implements Listener, PluginMessageListener {
 
                     } else {
                         player1.sendMessage(format(plugin.getConfigurationManager().getChat().getIgnoreFormat()));
+                    }
+                }
+            } else if (subchannel.equalsIgnoreCase("StaffMessage")) {
+                String playerUUID = in.readUTF();
+                String messageRecieved = in.readUTF();
+                messageRecieved = format(messageRecieved);
+
+                plugin.getLogger().info(messageRecieved);
+                for(Player player1 : plugin.getServer().getOnlinePlayers()) {
+                    if(player1.hasPermission("fmessage.staffchat")) {
+                        player1.sendMessage(format(messageRecieved));
                     }
                 }
             } else if(subchannel.equalsIgnoreCase("song")) {

@@ -51,4 +51,7 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: co.aikar:acf-bungee:0.5.0-SNAPSHOT" level="project" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="8c6284ba-a026-4339-8138-8d9529e7eb7a" />
+  </component>
 </module>

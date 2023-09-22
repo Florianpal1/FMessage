@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (C) 2022 Florianpal
  *
@@ -43,8 +41,8 @@ public class FMessage extends JavaPlugin {
         chatListener = new ChatListener(this);
         Bukkit.getPluginManager().registerEvents(chatListener, this);
 
-        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "hc:chatbungee");
-        this.getServer().getMessenger().registerIncomingPluginChannel(this, "hc:chatbukkit", chatListener);
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "fmessage:chatbungee");
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "fmessage:chatbukkit", chatListener);
     }
 
     public void createDefaultConfiguration(File actual, String defaultName) {

@@ -57,6 +57,8 @@ public class FMessage extends Plugin {
     private final Map<UUID, UUID> playerMessage = new HashMap<>();
     private final List<UUID> playerSpy = new ArrayList<>();
 
+    private final List<UUID> playerStaff = new ArrayList<>();
+
     @Override
     public void onEnable() {
 
@@ -255,4 +257,15 @@ public class FMessage extends Plugin {
         groups = groupCommandManager.getGroups();
     }
 
+    public boolean isPlayerStaff(UUID player) {
+        return playerStaff.contains(player);
+    }
+
+    public void supPlayerStaff(UUID player) {
+        playerStaff.remove(player);
+    }
+
+    public void addPlayerStaff(UUID player) {
+        this.playerStaff.add(player);
+    }
 }
