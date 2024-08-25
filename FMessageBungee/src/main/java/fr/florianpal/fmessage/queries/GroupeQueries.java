@@ -16,26 +16,28 @@
 
 package fr.florianpal.fmessage.queries;
 
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
 import fr.florianpal.fmessage.objects.Group;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class GroupeQueries implements IDatabaseTable {
 
-    private static final String GET_GROUPS = "SELECT * FROM hcm_groups";
-    private static final String GET_GROUP = "SELECT * FROM hcm_groups where playerOwnerUuid=? and name=?";
-    private static final String GET_GROUP_BY_NAME = "SELECT * FROM hcm_groups where name=?";
+    private static final String GET_GROUPS = "SELECT * FROM fm_groups";
+    private static final String GET_GROUP = "SELECT * FROM fm_groups where playerOwnerUuid=? and name=?";
+    private static final String GET_GROUP_BY_NAME = "SELECT * FROM fm_groups where name=?";
 
-    private static final String ADD_GROUP = "INSERT INTO hcm_groups (playerOwnerUuid, name) VALUES(?,?)";
-    private static final String REMOVE_GROUP = "DELETE FROM hcm_groups WHERE id=?";
+    private static final String ADD_GROUP = "INSERT INTO fm_groups (playerOwnerUuid, name) VALUES(?,?)";
+    private static final String REMOVE_GROUP = "DELETE FROM fm_groups WHERE id=?";
 
     private final DatabaseManager databaseManager;
 
@@ -43,7 +45,7 @@ public class GroupeQueries implements IDatabaseTable {
         this.databaseManager = plugin.getDatabaseManager();
     }
 
-    public void addGroupe(ProxiedPlayer playerSender, String name) {
+    public void addGroupe(Player playerSender, String name) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_GROUP);
@@ -115,7 +117,7 @@ public class GroupeQueries implements IDatabaseTable {
         return groups;
     }
 
-    public int getGroupId(ProxiedPlayer playerSender, String name) {
+    public int getGroupId(Player playerSender, String name) {
         PreparedStatement statement = null;
         ResultSet result = null;
         int id = -1;
@@ -174,7 +176,7 @@ public class GroupeQueries implements IDatabaseTable {
         return id;
     }
 
-    public boolean groupExist(ProxiedPlayer playerSender, String name) {
+    public boolean groupExist(Player playerSender, String name) {
         PreparedStatement statement = null;
         ResultSet result = null;
         boolean retour = false;
@@ -235,7 +237,7 @@ public class GroupeQueries implements IDatabaseTable {
 
     @Override
     public String[] getTable() {
-        return new String[]{"hcm_groups",
+        return new String[]{"fm_groups",
                 "`id` INTEGER AUTO_INCREMENT," +
                 "`playerOwnerUuid` VARCHAR(36) NOT NULL, " +
                         "`name` VARCHAR(36) NOT NULL, " +

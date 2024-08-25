@@ -16,10 +16,10 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.queries.GroupeMemberQueries;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;
 
@@ -37,24 +37,24 @@ public class GroupMemberCommandManager {
         groupeMemberQueries.setGroupMembers(group);
     }
 
-    public void addGroupMember(int id_group, ProxiedPlayer playerTarget)  {
+    public void addGroupMember(int id_group, Player playerTarget)  {
         groupeMemberQueries.addGroupeMember(id_group, playerTarget);
     }
 
 
-    public void removeGroupMember(int id_group, ProxiedPlayer playerTarget) {
+    public void removeGroupMember(int id_group, Player playerTarget) {
         groupeMemberQueries.removeGroupeMember(id_group, playerTarget);
     }
 
-    public boolean inGroup(int id_group, ProxiedPlayer playerTarget) {
+    public boolean inGroup(int id_group, Player playerTarget) {
         return groupeMemberQueries.inGroupMembers(id_group, playerTarget);
     }
 
-    public boolean getToggle(int id_group, ProxiedPlayer playerTarget) {
+    public boolean getToggle(int id_group, Player playerTarget) {
         return groupeMemberQueries.getGroupeMemberToggle(id_group, playerTarget);
     }
 
-    public int getGroupByToggle(ProxiedPlayer playerTarget) {
+    public int getGroupByToggle(Player playerTarget) {
         return groupeMemberQueries.getGroupByToggle(playerTarget);
     }
 
@@ -62,7 +62,7 @@ public class GroupMemberCommandManager {
         return groupeMemberQueries.alreadyToggle(playerTarget);
     }
 
-    public void setToggle(int id_group, ProxiedPlayer playerTarget, int toggle) {
+    public void setToggle(int id_group, Player playerTarget, int toggle) {
         groupeMemberQueries.setGroupeMemberToggle(id_group, playerTarget,toggle);
     }
 

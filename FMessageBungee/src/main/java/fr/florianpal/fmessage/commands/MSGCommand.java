@@ -22,14 +22,16 @@ import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import fr.florianpal.fmessage.utils.FormatUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @CommandAlias("m|msg")
@@ -48,9 +50,9 @@ public class MSGCommand extends BaseCommand {
     @CommandPermission("fmessage.msg")
     @Description("{@@fmessage.msg_help_description}")
     @CommandCompletion("@players")
-    public void onMSG(ProxiedPlayer playerSender, String playerTargetName, String message) {
+    public void onMSG(Player playerSender, String playerTargetName, String message) {
 
-        ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(playerTargetName);
+        Player playerTarget = plugin.getServer().getPlayer(playerTargetName).get();
 
         if (playerTarget == null) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
@@ -66,35 +68,40 @@ public class MSGCommand extends BaseCommand {
 
                 String formatTarget = plugin.getConfigurationManager().getChat().getTargetChatFormat();
 
-                formatTarget = formatTarget.replace("{sender}", playerSender.getDisplayName());
-                formatTarget = formatTarget.replace("{target}", playerTarget.getDisplayName());
-                formatTarget = plugin.format(formatTarget);
+                formatTarget = formatTarget.replace("{sender}", playerSender.getUsername());
+                formatTarget = formatTarget.replace("{target}", playerTarget.getUsername());
+                formatTarget = FormatUtil.format(formatTarget);
 
                 formatTarget = formatTarget.replace("{message}", message);
 
+                TextComponent texteTarget;
                 if (playerSender.hasPermission("fmessage.colors")) {
-                    formatTarget = plugin.format(formatTarget);
+                    texteTarget = FormatUtil.formatToTextComponent(formatTarget);
+                } else {
+                    texteTarget = Component.text(formatTarget);
                 }
-                BaseComponent texteTarget = new TextComponent(formatTarget);
 
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("song");
                 out.writeUTF(playerTarget.getUniqueId().toString());
-                playerTarget.sendData("fmessage:chatbukkit", out.toByteArray());
+                playerTarget.sendPluginMessage(FMessage.BUKKIT_CHAT, out.toByteArray());
 
                 playerTarget.sendMessage(texteTarget);
 
                 String formatSender = plugin.getConfigurationManager().getChat().getSenderChatFormat();
 
-                formatSender = formatSender.replace("{sender}", playerSender.getDisplayName());
-                formatSender = formatSender.replace("{target}", playerTarget.getDisplayName());
-                formatSender = plugin.format(formatSender);
+                formatSender = formatSender.replace("{sender}", playerSender.getUsername());
+                formatSender = formatSender.replace("{target}", playerTarget.getUsername());
+                formatSender = FormatUtil.format(formatSender);
 
                 formatSender = formatSender.replace("{message}", message);
+
+                TextComponent texteSender;
                 if (playerSender.hasPermission("fmessage.colors")) {
-                    formatSender = plugin.format(formatSender);
+                    texteSender = FormatUtil.formatToTextComponent(formatSender);
+                } else {
+                    texteSender = Component.text(formatSender);
                 }
-                BaseComponent texteSender = new TextComponent(formatSender);
                 playerSender.sendMessage(texteSender);
 
                 plugin.setPreviousPlayer(playerSender, playerTarget);
@@ -102,24 +109,26 @@ public class MSGCommand extends BaseCommand {
 
                 String formatSpy = plugin.getConfigurationManager().getChat().getSpyChatFormat();
 
-                formatSpy = formatSpy.replace("{sender}", playerSender.getDisplayName());
-                formatSpy = formatSpy.replace("{target}", playerTarget.getDisplayName());
-                formatSpy = plugin.format(formatSpy);
+                formatSpy = formatSpy.replace("{sender}", playerSender.getUsername());
+                formatSpy = formatSpy.replace("{target}", playerTarget.getUsername());
+                formatSpy = FormatUtil.format(formatSpy);
 
                 formatSpy = formatSpy.replace("{message}", message);
 
+                TextComponent texteSpy;
                 if (playerSender.hasPermission("fmessage.colors")) {
-                    formatSpy = plugin.format(formatSpy);
+                    texteSpy = FormatUtil.formatToTextComponent(formatSpy);
+                } else {
+                    texteSpy = Component.text(formatSpy);
                 }
-                BaseComponent texteSpy = new TextComponent(formatSpy);
 
-                System.out.println(formatSpy);
+                plugin.getLogger().info(formatSpy);
 
                 for (UUID uuid : plugin.getPlayerSpy()) {
-                    ProxiedPlayer player = plugin.getProxy().getPlayer(uuid);
+                    Optional<Player> player = plugin.getServer().getPlayer(uuid);
 
-                    if (player != null) {
-                        player.sendMessage(texteSpy);
+                    if (player.isPresent()) {
+                        player.get().sendMessage(texteSpy);
                     }
                 }
             }

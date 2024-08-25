@@ -23,13 +23,15 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import fr.florianpal.fmessage.utils.FormatUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @CommandAlias("r")
@@ -45,7 +47,7 @@ public class RCommand extends BaseCommand {
     @Default
     @CommandPermission("fmessage.r")
     @Description("{@@fmessage.r_help_description}")
-    public void onR(ProxiedPlayer playerSender, String message){
+    public void onR(Player playerSender, String message){
         if(!plugin.havePreviousPlayer(playerSender)) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
             issuerTarget.sendInfo(MessageKeys.NO_PREVIOUS_PLAYER);
@@ -53,53 +55,56 @@ public class RCommand extends BaseCommand {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
             issuerTarget.sendInfo(MessageKeys.PLAYER_OFFLINE);
         } else {
-            ProxiedPlayer playerTarget = plugin.getPreviousPlayer(playerSender);
+            Player playerTarget = plugin.getPreviousPlayer(playerSender);
 
             String formatTarget = plugin.getConfigurationManager().getChat().getTargetChatFormat();
 
-            formatTarget = formatTarget.replace("{sender}", playerSender.getDisplayName());
-            formatTarget = formatTarget.replace("{target}", playerTarget.getDisplayName());
-            formatTarget = plugin.format(formatTarget);
+            formatTarget = formatTarget.replace("{sender}", playerSender.getUsername());
+            formatTarget = formatTarget.replace("{target}", playerTarget.getUsername());
+            formatTarget = FormatUtil.format(formatTarget);
 
             formatTarget = formatTarget.replace("{message}", message);
             if(playerSender.hasPermission("fmessage.colors")) {
-                formatTarget = plugin.format(formatTarget);
+                formatTarget = FormatUtil.format(formatTarget);
             }
-            BaseComponent texteTarget = new TextComponent(formatTarget);
+
+            TextComponent texteTarget = Component.text(formatTarget);
             playerTarget.sendMessage(texteTarget);
 
             String formatSender = plugin.getConfigurationManager().getChat().getSenderChatFormat();
 
-            formatSender = formatSender.replace("{sender}", playerSender.getDisplayName());
-            formatSender = formatSender.replace("{target}", playerTarget.getDisplayName());
-            formatSender = plugin.format(formatSender);
+            formatSender = formatSender.replace("{sender}", playerSender.getUsername());
+            formatSender = formatSender.replace("{target}", playerTarget.getUsername());
+            formatSender = FormatUtil.format(formatSender);
 
             formatSender = formatSender.replace("{message}", message);
             if(playerSender.hasPermission("fmessage.colors")) {
-                formatSender = plugin.format(formatSender);
+                formatSender = FormatUtil.format(formatSender);
             }
-            BaseComponent texteSender = new TextComponent(formatSender);
+            TextComponent texteSender = Component.text(formatSender);
             playerSender.sendMessage(texteSender);
 
             String formatSpy = plugin.getConfigurationManager().getChat().getSpyChatFormat();
 
-            formatSpy = formatSpy.replace("{sender}", playerSender.getDisplayName());
-            formatSpy = formatSpy.replace("{target}", playerTarget.getDisplayName());
-            formatSpy = plugin.format(formatSpy);
+            formatSpy = formatSpy.replace("{sender}", playerSender.getUsername());
+            formatSpy = formatSpy.replace("{target}", playerTarget.getUsername());
+            formatSpy = FormatUtil.format(formatSpy);
 
             formatSpy = formatSpy.replace("{message}", message);
 
-            if(playerSender.hasPermission("fmessage.colors")) {
-                formatSpy = plugin.format(formatSpy);
+            TextComponent texteSpy;
+            if (playerSender.hasPermission("fmessage.colors")) {
+                texteSpy = FormatUtil.formatToTextComponent(formatSpy);
+            } else {
+                texteSpy = Component.text(formatSpy);
             }
-            BaseComponent texteSpy = new TextComponent(formatSpy);
 
-            System.out.println(formatSpy);
+            plugin.getLogger().info(formatSpy);
 
             for(UUID uuid : plugin.getPlayerSpy()) {
-                ProxiedPlayer player = plugin.getProxy().getPlayer(uuid);
-                if(player != null) {
-                    player.sendMessage(texteSpy);
+                Optional<Player> player = plugin.getServer().getPlayer(uuid);
+                if(player.isPresent()) {
+                    player.get().sendMessage(texteSpy);
                 }
             }
         }

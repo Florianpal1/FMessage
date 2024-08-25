@@ -16,40 +16,58 @@
 
 package fr.florianpal.fmessage.managers;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
+import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
+import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
+import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
+import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.configurations.ChatConfig;
 import fr.florianpal.fmessage.configurations.DatabaseConfig;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ConfigurationManager {
     private FMessage core;
-
-    private ChatConfig chat = new ChatConfig();
-    private DatabaseConfig database = new DatabaseConfig();
-    private File File;
-    private Configuration config;
+    private final DatabaseConfig database = new DatabaseConfig();
+    private final YamlDocument databaseConfig;
 
     private File langFile;
-    private Configuration langConfig;
+    private YamlDocument langConfig;
+
+    private final ChatConfig chat = new ChatConfig();
+    private final YamlDocument chatConfig;
 
     public ConfigurationManager(FMessage core) {
         this.core = core;
 
-        File = new File(this.core.getDataFolder(), "config.yml");
-        core.createDefaultConfiguration(File, "config.yml");
         try {
-            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(File);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            databaseConfig = YamlDocument.create(new File(core.getDataDirectory().toFile(), "database.yml"),
+                    Objects.requireNonNull(getClass().getResourceAsStream("/database.yml")),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).setOptionSorting(UpdaterSettings.DEFAULT_OPTION_SORTING).build()
+            );
 
-        chat.load(config);
-        database.load(config);
+            chatConfig = YamlDocument.create(new File(core.getDataDirectory().toFile(), "config.yml"),
+                    Objects.requireNonNull(getClass().getResourceAsStream("/config.yml")),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).setOptionSorting(UpdaterSettings.DEFAULT_OPTION_SORTING).build()
+            );
+
+
+            chat.load(chatConfig);
+            database.load(databaseConfig);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public ChatConfig getChat() {

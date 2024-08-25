@@ -16,10 +16,10 @@
 
 package fr.florianpal.fmessage.queries;
 
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,11 +29,11 @@ import java.util.*;
 
 public class IgnoreQueries implements IDatabaseTable {
 
-    private static final String GET_IGNORES = "SELECT * FROM hcm_ignores";
-    private static final String GET_IGNORE = "SELECT * FROM hcm_ignores where playerSenderUuid=? and playerTargetUuid=?";
-    private static final String GET_ARE_IGNORES = "SELECT * FROM hcm_ignores where playerTargetUuid=?";
-    private static final String ADD_IGNORE = "INSERT INTO hcm_ignores (playerSenderUuid, playerTargetUuid) VALUES(?,?)";
-    private static final String REMOVE_IGNORE = "DELETE FROM hcm_ignores WHERE playerSenderUuid=? and playerTargetUuid=?";
+    private static final String GET_IGNORES = "SELECT * FROM fm_ignores";
+    private static final String GET_IGNORE = "SELECT * FROM fm_ignores where playerSenderUuid=? and playerTargetUuid=?";
+    private static final String GET_ARE_IGNORES = "SELECT * FROM fm_ignores where playerTargetUuid=?";
+    private static final String ADD_IGNORE = "INSERT INTO fm_ignores (playerSenderUuid, playerTargetUuid) VALUES(?,?)";
+    private static final String REMOVE_IGNORE = "DELETE FROM fm_ignores WHERE playerSenderUuid=? and playerTargetUuid=?";
 
     private final DatabaseManager databaseManager;
 
@@ -41,7 +41,7 @@ public class IgnoreQueries implements IDatabaseTable {
         this.databaseManager = plugin.getDatabaseManager();
     }
 
-    public void addIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
+    public void addIgnore(Player playerSender, Player playerTarget) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_IGNORE);
@@ -61,7 +61,7 @@ public class IgnoreQueries implements IDatabaseTable {
         }
     }
 
-    public void removeIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
+    public void removeIgnore(Player playerSender, Player playerTarget) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(REMOVE_IGNORE);
@@ -152,7 +152,7 @@ public class IgnoreQueries implements IDatabaseTable {
         return ignores;
     }
 
-    public boolean ignoreExist(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
+    public boolean ignoreExist(Player playerSender, Player playerTarget) {
         PreparedStatement statement = null;
         ResultSet result = null;
         boolean retour = false;
@@ -185,7 +185,7 @@ public class IgnoreQueries implements IDatabaseTable {
 
     @Override
     public String[] getTable() {
-        return new String[]{"hcm_ignores",
+        return new String[]{"fm_ignores",
                 "`playerSenderUuid` VARCHAR(36) NOT NULL, " +
                         "`playerTargetUuid` VARCHAR(36) NOT NULL, " +
                         "PRIMARY KEY (`playerSenderUuid`, `playerTargetUuid`)",

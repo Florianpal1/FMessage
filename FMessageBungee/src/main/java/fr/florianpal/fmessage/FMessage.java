@@ -16,6 +16,14 @@
 
 package fr.florianpal.fmessage;
 
+import com.google.inject.Inject;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import fr.florianpal.fmessage.commands.*;
 import fr.florianpal.fmessage.managers.ConfigurationManager;
 import fr.florianpal.fmessage.managers.DatabaseManager;
@@ -25,19 +33,24 @@ import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.queries.GroupeMemberQueries;
 import fr.florianpal.fmessage.queries.GroupeQueries;
 import fr.florianpal.fmessage.queries.IgnoreQueries;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Plugin;
+import org.slf4j.Logger;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.jar.JarFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
-public class FMessage extends Plugin {
+@Plugin(id = "fmessage", name = "FMessage", version = "1.0.0-SNAPSHOT",
+        url = "https://florianpal.fr", description = "FMessage", authors = {"Florianpal"})
+public class FMessage {
+
+    private final ProxyServer server;
+
+    private final org.slf4j.Logger logger;
+
+    private final Path dataDirectory;
 
     private ConfigurationManager configurationManager;
     private DatabaseManager databaseManager;
@@ -59,11 +72,26 @@ public class FMessage extends Plugin {
 
     private final List<UUID> playerStaff = new ArrayList<>();
 
-    @Override
-    public void onEnable() {
+    public static final MinecraftChannelIdentifier BUKKIT_CHAT = MinecraftChannelIdentifier.from("fmessage:chatbukkit");
 
-        File languageFile = new File(getDataFolder(), "lang_fr.yml");
+    public static final MinecraftChannelIdentifier BUNGEE_CHAT = MinecraftChannelIdentifier.from("fmessage:chatbungee");
+
+
+    @Inject
+    public FMessage(ProxyServer proxyServer, org.slf4j.Logger logger, @DataDirectory Path dataDirectory) {
+        this.server = proxyServer;
+        this.logger = logger;
+        this.dataDirectory = dataDirectory;
+    }
+
+    @Subscribe
+    public void onEnable(ProxyInitializeEvent event) {
+
+        File languageFile = new File(dataDirectory.toFile(), "lang_fr.yml");
         createDefaultConfiguration(languageFile, "lang_fr.yml");
+
+        server.getChannelRegistrar().register(BUKKIT_CHAT);
+        server.getChannelRegistrar().register(BUNGEE_CHAT);
 
         configurationManager = new ConfigurationManager(this);
 
@@ -82,12 +110,10 @@ public class FMessage extends Plugin {
         groupCommandManager = new GroupCommandManager(this);
         groupMemberCommandManager = new GroupMemberCommandManager(this);
 
-        commandManager = new CommandManager(this);
+        commandManager = new CommandManager(server, this);
         commandManager.registerDependency(ConfigurationManager.class, configurationManager);
 
-        getProxy().registerChannel("fmessage:chatbukkit");
-        getProxy().registerChannel("fmessage:chatbungee");
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new MessageListener(this));
+        server.getEventManager().register(this, new MessageListener(this));
 
         commandCompletionsManager = new CommandCompletionsManager(this);
 
@@ -108,6 +134,31 @@ public class FMessage extends Plugin {
         getLogger().info("FMessage enabled");
     }
 
+    public ConfigurationManager getConfigurationManager() {
+        return configurationManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    public void setPreviousPlayer(Player sender, Player target) {
+        playerMessage.put(sender.getUniqueId(), target.getUniqueId());
+    }
+
+    public boolean isPreviousPlayerOnline(Player proxiedPlayer) {
+        Optional<Player> proxiedPlayer1 = server.getPlayer(playerMessage.get(proxiedPlayer.getUniqueId()));
+        return proxiedPlayer1.isPresent();
+    }
+
+    public Player getPreviousPlayer(Player proxiedPlayer) {
+        return getServer().getPlayer(playerMessage.get(proxiedPlayer.getUniqueId())).get();
+    }
+
+    public boolean havePreviousPlayer(Player proxiedPlayer) {
+        return playerMessage.containsKey(proxiedPlayer.getUniqueId());
+    }
+
     public void createDefaultConfiguration(File actual, String defaultName) {
         // Make parent directories
         File parent = actual.getParentFile();
@@ -121,12 +172,14 @@ public class FMessage extends Plugin {
 
         InputStream input = null;
         try {
-            JarFile file = new JarFile(this.getFile());
+            JarFile file = new JarFile(new File(FMessage.class.getProtectionDomain().getCodeSource().getLocation().toURI()));
             ZipEntry copy = file.getEntry(defaultName);
             if (copy == null) throw new FileNotFoundException();
             input = file.getInputStream(copy);
         } catch (IOException e) {
-            getLogger().severe("Unable to read default configuration: " + defaultName);
+            getLogger().error("Unable to read default configuration: " + defaultName);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
 
         if (input != null) {
@@ -157,46 +210,6 @@ public class FMessage extends Plugin {
                 }
             }
         }
-    }
-
-    public ConfigurationManager getConfigurationManager() {
-        return configurationManager;
-    }
-
-    public CommandManager getCommandManager() {
-        return commandManager;
-    }
-
-    public void setPreviousPlayer(ProxiedPlayer sender, ProxiedPlayer target) {
-        playerMessage.put(sender.getUniqueId(), target.getUniqueId());
-    }
-
-    public boolean isPreviousPlayerOnline(ProxiedPlayer proxiedPlayer) {
-        ProxiedPlayer proxiedPlayer1 = getProxy().getPlayer(playerMessage.get(proxiedPlayer.getUniqueId()));
-        return proxiedPlayer1 != null;
-    }
-
-    public ProxiedPlayer getPreviousPlayer(ProxiedPlayer proxiedPlayer) {
-        return getProxy().getPlayer(playerMessage.get(proxiedPlayer.getUniqueId()));
-    }
-
-    public boolean havePreviousPlayer(ProxiedPlayer proxiedPlayer) {
-        return playerMessage.containsKey(proxiedPlayer.getUniqueId());
-    }
-
-    public String format(String msg) {
-        Pattern pattern = Pattern.compile("[{]#[a-fA-F0-9]{6}[}]");
-        Matcher match = pattern.matcher(msg);
-        while (match.find()) {
-            String color = msg.substring(match.start(), match.end());
-            String replace = color;
-            color = color.replace("{", "");
-            color = color.replace("}", "");
-            msg = msg.replace(replace, ChatColor.of(color).toString());
-            match = pattern.matcher(msg);
-        }
-
-        return ChatColor.translateAlternateColorCodes('&', msg);
     }
 
     public List<UUID> getPlayerSpy() {
@@ -267,5 +280,17 @@ public class FMessage extends Plugin {
 
     public void addPlayerStaff(UUID player) {
         this.playerStaff.add(player);
+    }
+
+    public ProxyServer getServer() {
+        return server;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public Path getDataDirectory() {
+        return dataDirectory;
     }
 }

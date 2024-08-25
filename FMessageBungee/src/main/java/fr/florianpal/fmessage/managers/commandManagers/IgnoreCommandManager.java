@@ -16,11 +16,13 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.queries.IgnoreQueries;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 public class IgnoreCommandManager {
@@ -40,16 +42,16 @@ public class IgnoreCommandManager {
         return ignoreQueries.getAreIgnores(uuid);
     }
 
-    public void addIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget)  {
+    public void addIgnore(Player playerSender, Player playerTarget)  {
         ignoreQueries.addIgnore(playerSender, playerTarget);
     }
 
 
-    public void removeIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
+    public void removeIgnore(Player playerSender, Player playerTarget) {
         ignoreQueries.removeIgnore(playerSender, playerTarget);
     }
 
-    public boolean ignoreExist(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
+    public boolean ignoreExist(Player playerSender, Player playerTarget) {
         return ignoreQueries.ignoreExist(playerSender, playerTarget);
     }
 }

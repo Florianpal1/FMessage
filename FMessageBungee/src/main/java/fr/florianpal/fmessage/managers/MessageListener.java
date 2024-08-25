@@ -20,26 +20,25 @@ import co.aikar.commands.CommandIssuer;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.PluginMessageEvent;
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.GroupMemberCommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
 import fr.florianpal.fmessage.objects.Member;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PluginMessageEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-public class MessageListener implements Listener {
+import static fr.florianpal.fmessage.FMessage.BUNGEE_CHAT;
+
+public class MessageListener {
 
     private final FMessage plugin;
     private final GroupMemberCommandManager groupMemberCommandManager;
@@ -55,53 +54,52 @@ public class MessageListener implements Listener {
         this.commandManager = plugin.getCommandManager();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @Subscribe
     public void onMessage(PluginMessageEvent event) {
-        if (!event.isCancelled()) {
-            if (event.getTag().equalsIgnoreCase("fmessage:chatbungee")) {
 
-                ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
+        if (event.getIdentifier().equals(BUNGEE_CHAT)) {
 
-                String subchannel = in.readUTF();
-                UUID uuid = UUID.fromString(in.readUTF());
-                String messageWithFormat = in.readUTF();
-                String message = in.readUTF();
-                boolean colors = in.readBoolean();
+            ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
 
-                if (groupMemberCommandManager.alreadyToggle(uuid)) {
-                    int id = groupMemberCommandManager.getGroupByToggle(ProxyServer.getInstance().getPlayer(uuid));
-                    for (Member member : plugin.getGroups().get(id).getMember()) {
-                        ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(member.getUuid());
-                        if (playerTarget != null) {
-                            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerTarget);
-                            issuerTarget.sendInfo(MessageKeys.GROUP_MSG, "{group}", plugin.getGroups().get(id).getName(), "{player}", playerTarget.getDisplayName(), "{message}", message);
-                            plugin.getLogger().info("[{" + plugin.getGroups().get(id).getName() + "}] " + playerTarget.getDisplayName() + " : " + message);
-                        }
+            String subchannel = in.readUTF();
+            UUID uuid = UUID.fromString(in.readUTF());
+            String messageWithFormat = in.readUTF();
+            String message = in.readUTF();
+            boolean colors = in.readBoolean();
+
+            if (groupMemberCommandManager.alreadyToggle(uuid)) {
+                int id = groupMemberCommandManager.getGroupByToggle(plugin.getServer().getPlayer(uuid).get());
+                for (Member member : plugin.getGroups().get(id).getMember()) {
+                    Optional<Player> playerTarget = plugin.getServer().getPlayer(member.getUuid());
+                    if (playerTarget.isPresent()) {
+                        CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerTarget);
+                        issuerTarget.sendInfo(MessageKeys.GROUP_MSG, "{group}", plugin.getGroups().get(id).getName(), "{player}", playerTarget.get().getUsername(), "{message}", message);
+                        plugin.getLogger().info("[{" + plugin.getGroups().get(id).getName() + "}] " + playerTarget.get().getUsername() + " : " + message);
                     }
-                } else if(plugin.isPlayerStaff(uuid)) {
-                    for (Map.Entry<String, ServerInfo> entry : plugin.getProxy().getServers().entrySet()) {
-                        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                        out.writeUTF(STAFF_CHAT);
-                        out.writeUTF(uuid.toString());
-                        out.writeUTF(messageWithFormat);
-                        entry.getValue().sendData("fmessage:chatbukkit", out.toByteArray());
-                    }
-                } else {
-                    for (Map.Entry<String, ServerInfo> entry : plugin.getProxy().getServers().entrySet()) {
-                        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                        out.writeUTF(subchannel);
-                        out.writeUTF(uuid.toString());
-                        out.writeUTF(messageWithFormat);
-                        List<UUID> ignores = new ArrayList<>(ignoreCommandManager.getAreIgnores(uuid));
+                }
+            } else if (plugin.isPlayerStaff(uuid)) {
+                for (RegisteredServer entry : plugin.getServer().getAllServers()) {
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF(STAFF_CHAT);
+                    out.writeUTF(uuid.toString());
+                    out.writeUTF(messageWithFormat);
+                    entry.sendPluginMessage(FMessage.BUKKIT_CHAT, out.toByteArray());
+                }
+            } else {
+                for (RegisteredServer entry : plugin.getServer().getAllServers()) {
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF(subchannel);
+                    out.writeUTF(uuid.toString());
+                    out.writeUTF(messageWithFormat);
+                    List<UUID> ignores = new ArrayList<>(ignoreCommandManager.getAreIgnores(uuid));
 
-                        String uuids = "";
-                        for (UUID uuid1 : ignores) {
-                            uuids = uuid1.toString() + ";";
-                        }
-                        out.writeUTF(uuids);
-                        out.writeBoolean(colors);
-                        entry.getValue().sendData("fmessage:chatbukkit", out.toByteArray());
+                    String uuids = "";
+                    for (UUID uuid1 : ignores) {
+                        uuids = uuid1.toString() + ";";
                     }
+                    out.writeUTF(uuids);
+                    out.writeBoolean(colors);
+                    entry.sendPluginMessage(FMessage.BUKKIT_CHAT, out.toByteArray());
                 }
             }
         }

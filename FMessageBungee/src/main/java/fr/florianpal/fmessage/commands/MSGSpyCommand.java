@@ -23,10 +23,10 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("chatspy")
 public class MSGSpyCommand extends BaseCommand {
@@ -41,7 +41,7 @@ public class MSGSpyCommand extends BaseCommand {
     @Default
     @CommandPermission("fmessage.chatspy")
     @Description("{@@fmessage.msgspy_help_description}")
-    public void onMSGSpy(ProxiedPlayer playerSender) {
+    public void onMSGSpy(Player playerSender) {
         CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
         if(plugin.isPlayerSpy(playerSender.getUniqueId())) {
             plugin.supPlayerSpy(playerSender.getUniqueId());

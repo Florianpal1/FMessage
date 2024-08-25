@@ -16,12 +16,12 @@
 
 package fr.florianpal.fmessage.queries;
 
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.objects.Member;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,18 +33,18 @@ import java.util.UUID;
 
 public class GroupeMemberQueries implements IDatabaseTable {
 
-    private static final String GET_GROUPS_MEMBERS = "SELECT * FROM hcm_groupMembers";
-    private static final String GET_MEMBERS = "SELECT * FROM hcm_groupMembers where id_group=?";
-    private static final String GET_MEMBER = "SELECT * FROM hcm_groupMembers where id_group=? and playerMemberUuid=?";
-    private static final String GET_TOGGLE = "SELECT toggle FROM hcm_groupMembers where id_group=? and playerMemberUuid=?";
-    private static final String GET_MEMBER_TOGGLE = "SELECT toggle FROM hcm_groupMembers where playerMemberUuid=?";
-    private static final String GET_GROUP_BY_TOGGLE = "SELECT * FROM hcm_groupMembers where playerMemberUuid=? and toggle=1";
+    private static final String GET_GROUPS_MEMBERS = "SELECT * FROM fm_groupMembers";
+    private static final String GET_MEMBERS = "SELECT * FROM fm_groupMembers where id_group=?";
+    private static final String GET_MEMBER = "SELECT * FROM fm_groupMembers where id_group=? and playerMemberUuid=?";
+    private static final String GET_TOGGLE = "SELECT toggle FROM fm_groupMembers where id_group=? and playerMemberUuid=?";
+    private static final String GET_MEMBER_TOGGLE = "SELECT toggle FROM fm_groupMembers where playerMemberUuid=?";
+    private static final String GET_GROUP_BY_TOGGLE = "SELECT * FROM fm_groupMembers where playerMemberUuid=? and toggle=1";
 
 
-    private static final String ADD_GROUP_MEMBER = "INSERT INTO hcm_groupMembers (id_group, playerMemberUuid, toggle) VALUES(?,?,?)";
-    private static final String REMOVE_GROUP_MEMBER = "DELETE FROM hcm_groupMembers WHERE id_group=? and playerMemberUuid=?";
-    private static final String REMOVE_GROUP = "DELETE FROM hcm_groupMembers WHERE id_group=?";
-    private static final String UPDATE_GROUP_MEMBER_TOGGLE = "UPDATE hcm_groupMembers SET toggle=? WHERE id_group=? and playerMemberUuid=?";
+    private static final String ADD_GROUP_MEMBER = "INSERT INTO fm_groupMembers (id_group, playerMemberUuid, toggle) VALUES(?,?,?)";
+    private static final String REMOVE_GROUP_MEMBER = "DELETE FROM fm_groupMembers WHERE id_group=? and playerMemberUuid=?";
+    private static final String REMOVE_GROUP = "DELETE FROM fm_groupMembers WHERE id_group=?";
+    private static final String UPDATE_GROUP_MEMBER_TOGGLE = "UPDATE fm_groupMembers SET toggle=? WHERE id_group=? and playerMemberUuid=?";
 
     private final DatabaseManager databaseManager;
 
@@ -52,7 +52,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         this.databaseManager = plugin.getDatabaseManager();
     }
 
-    public void addGroupeMember(int id_group, ProxiedPlayer player) {
+    public void addGroupeMember(int id_group, Player player) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_GROUP_MEMBER);
@@ -92,7 +92,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public void removeGroupeMember(int id_group, ProxiedPlayer player) {
+    public void removeGroupeMember(int id_group, Player player) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(REMOVE_GROUP_MEMBER);
@@ -150,7 +150,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public boolean inGroupMembers(int id_group, ProxiedPlayer proxiedPlayer) {
+    public boolean inGroupMembers(int id_group, Player proxiedPlayer) {
 
         boolean retour = false;
         PreparedStatement statement = null;
@@ -182,7 +182,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         return retour;
     }
 
-    public void setGroupeMemberToggle(int id_group, ProxiedPlayer player, int toggle) {
+    public void setGroupeMemberToggle(int id_group, Player player, int toggle) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(UPDATE_GROUP_MEMBER_TOGGLE);
@@ -204,7 +204,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public boolean getGroupeMemberToggle(int id_group, ProxiedPlayer proxiedPlayer) {
+    public boolean getGroupeMemberToggle(int id_group, Player proxiedPlayer) {
 
         boolean retour = false;
         PreparedStatement statement = null;
@@ -274,7 +274,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         return retour;
     }
 
-    public int getGroupByToggle(ProxiedPlayer proxiedPlayer) {
+    public int getGroupByToggle(Player proxiedPlayer) {
 
         int id = -1;
         PreparedStatement statement = null;
@@ -307,7 +307,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
 
     @Override
     public String[] getTable() {
-        return new String[]{"hcm_groupMembers",
+        return new String[]{"fm_groupMembers",
                 "`id_group` INTEGER NOT NULL," +
                         "`playerMemberUuid` VARCHAR(36) NOT NULL, " +
                         "`toggle` BIT NOT NULL, " +

@@ -16,7 +16,7 @@
 
 package fr.florianpal.fmessage.configurations;
 
-import net.md_5.bungee.config.Configuration;
+import dev.dejvokep.boostedyaml.YamlDocument;
 
 public class DatabaseConfig {
 
@@ -24,13 +24,13 @@ public class DatabaseConfig {
     private String user;
     private String password;
 
-    public void load(Configuration config) {
+    public void load(YamlDocument config) {
         url = config.getString("database.url");
         user = config.getString("database.user");
         password = config.getString("database.password");
     }
 
-    public void save(Configuration config) {
+    public void save(YamlDocument config) {
         config.set("database.url", url);
         config.set("database.user", user);
         config.set("database.password", password);

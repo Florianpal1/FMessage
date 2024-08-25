@@ -30,6 +30,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.util.ArrayList;
@@ -46,8 +47,13 @@ public class ChatListener implements Listener, PluginMessageListener {
 
     }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onChatSync(PlayerChatEvent e) {
+        e.setCancelled(true);
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
-    public void onChat(AsyncPlayerChatEvent e) {
+    public void onChatAsync(AsyncPlayerChatEvent e) {
 
         int nbr_maj = nbr_maj(e.getMessage());
         int nbr_min = nbr_min(e.getMessage());
@@ -68,6 +74,8 @@ public class ChatListener implements Listener, PluginMessageListener {
                 }
             }
 
+            e.setCancelled(true);
+
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Message");
             out.writeUTF(e.getPlayer().getUniqueId().toString());
@@ -84,8 +92,6 @@ public class ChatListener implements Listener, PluginMessageListener {
             out.writeUTF("" + e.getMessage());
             out.writeBoolean(plugin.getVaultIntegrationManager().getPerms().has(e.getPlayer(), "fmessage.colors"));
             e.getPlayer().sendPluginMessage(plugin, "fmessage:chatbungee", out.toByteArray());
-
-            e.setCancelled(true);
         }
     }
 
@@ -188,7 +194,7 @@ public class ChatListener implements Listener, PluginMessageListener {
         }
     }
     private String format(String msg) {
-        Pattern pattern = Pattern.compile("[{]#[a-fA-F0-9]{6}[}]");
+        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
         if (Bukkit.getVersion().contains("1.16") || Bukkit.getVersion().contains("1.17")) {
             Matcher match = pattern.matcher(msg);
             while (match.find()) {

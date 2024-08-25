@@ -22,10 +22,9 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
+import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
-import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("mc|staffchat")
 public class StaffCommand extends BaseCommand {
@@ -40,7 +39,7 @@ public class StaffCommand extends BaseCommand {
     @Default
     @CommandPermission("fmessage.staffchat")
     @Description("{@@fmessage.msg_help_description}")
-    public void onStaffChat(ProxiedPlayer playerSender, String message) {
+    public void onStaffChat(Player playerSender, String message) {
 
     }
 }

@@ -16,13 +16,13 @@
 
 package fr.florianpal.fmessage.configurations;
 
-import net.md_5.bungee.config.Configuration;
+import dev.dejvokep.boostedyaml.YamlDocument;
 
 public class ChatConfig {
     private String targetChatFormat;
     private String senderChatFormat;
     private String spyChatFormat;
-    public void load(Configuration config) {
+    public void load(YamlDocument config) {
         targetChatFormat = config.getString("format.targetChatFormat");
         senderChatFormat = config.getString("format.senderChatFormat");
         spyChatFormat = config.getString("format.spyChatFormat");

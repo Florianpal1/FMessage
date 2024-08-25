@@ -37,6 +37,7 @@ public class DatabaseManager {
         config.addDataSourceProperty( "cachePrepStmts" , "true" );
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
         ds = new HikariDataSource( config );
     }
 
@@ -59,7 +60,7 @@ public class DatabaseManager {
                         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + tableInformation[0] + "` (" + tableInformation[1] + ") " + tableInformation[2] + ";");
                         plugin.getLogger().info("The table " + tableInformation[0] + " did not exist and was created !");
                     } catch (SQLException e) {
-                        plugin.getLogger().severe("Unable to create table " + tableInformation[0] + " !");
+                        plugin.getLogger().error("Unable to create table " + tableInformation[0] + " !");
                         e.printStackTrace();
                     }
                 }

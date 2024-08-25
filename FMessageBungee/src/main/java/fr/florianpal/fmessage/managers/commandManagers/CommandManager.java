@@ -17,30 +17,30 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
-import co.aikar.commands.BungeeCommandManager;
 import co.aikar.commands.MessageType;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.plugin.Plugin;
+import co.aikar.commands.VelocityCommandManager;
+import com.velocitypowered.api.proxy.ProxyServer;
+import fr.florianpal.fmessage.FMessage;
+import net.kyori.adventure.text.format.NamedTextColor;
 
-import java.io.IOException;
 import java.util.Locale;
 
-public class CommandManager extends BungeeCommandManager {
-    public CommandManager(Plugin plugin) {
-        super(plugin);
+public class CommandManager extends VelocityCommandManager {
+    public CommandManager(ProxyServer proxyServer, FMessage plugin) {
+        super(proxyServer, plugin);
         this.enableUnstableAPI("help");
 
-        this.setFormat(MessageType.SYNTAX, ChatColor.YELLOW, ChatColor.GOLD);
-        this.setFormat(MessageType.INFO, ChatColor.YELLOW, ChatColor.GOLD);
-        this.setFormat(MessageType.HELP, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.RED);
-        this.setFormat(MessageType.ERROR, ChatColor.RED, ChatColor.GOLD);
-        try {
-            this.getLocales().loadYamlLanguageFile("lang_fr.yml", Locale.FRENCH);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Failed to load ACF core language file");
-            e.printStackTrace();
-        }
+        this.setFormat(MessageType.SYNTAX, NamedTextColor.YELLOW, NamedTextColor.GOLD);
+        this.setFormat(MessageType.INFO, NamedTextColor.YELLOW, NamedTextColor.GOLD);
+        this.setFormat(MessageType.HELP, NamedTextColor.YELLOW, NamedTextColor.GOLD, NamedTextColor.RED);
+        this.setFormat(MessageType.ERROR, NamedTextColor.RED, NamedTextColor.GOLD);
+        this.getLocales().loadLanguages();
 
         this.getLocales().setDefaultLocale(Locale.FRENCH);
+    }
+
+    public void reloadLang() {
+
+        this.getLocales().loadLanguages();
     }
 }
