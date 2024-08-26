@@ -22,6 +22,10 @@ import com.google.common.io.ByteStreams;
 import fr.florianpal.fmessage.FMessage;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -142,7 +146,7 @@ public class ChatListener implements Listener, PluginMessageListener {
 
             if (subchannel.equalsIgnoreCase("Message")) {
                 String playerUUID = in.readUTF();
-                String formatWithPlaceholder = in.readUTF();
+                TextComponent formatWithPlaceholder = format(in.readUTF());
                 String messageRecieved = in.readUTF();
 
                 String[] uuids = in.readUTF().split(";");
@@ -156,15 +160,23 @@ public class ChatListener implements Listener, PluginMessageListener {
 
                 boolean colors = in.readBoolean();
 
-                String messageFinalWithoutMessage = format(formatWithPlaceholder);
+                TextReplacementConfig textReplacementConfigMessageColored = TextReplacementConfig.builder()
+                        .matchLiteral("{message}")
+                        .replacement(format(messageRecieved))
+                        .build();
 
-                plugin.getLogger().info(messageFinalWithoutMessage.replace("{message}", format(messageRecieved)));
+                TextReplacementConfig textReplacementConfigMessageNonColored = TextReplacementConfig.builder()
+                        .matchLiteral("{message}")
+                        .replacement(messageRecieved)
+                        .build();
+
+                plugin.getLogger().info(LegacyComponentSerializer.legacyAmpersand().serialize(formatWithPlaceholder.replaceText(textReplacementConfigMessageColored)));
                 for(Player player1 : plugin.getServer().getOnlinePlayers()) {
                     if(!ignores.contains(player1.getUniqueId())) {
                         if(colors) {
-                            player1.sendMessage(messageFinalWithoutMessage.replace("{message}", format(messageRecieved)));
+                            player1.sendMessage(formatWithPlaceholder.replaceText(textReplacementConfigMessageColored));
                         } else {
-                            player1.sendMessage(messageFinalWithoutMessage.replace("{message}", messageRecieved));
+                            player1.sendMessage(formatWithPlaceholder.replaceText(textReplacementConfigMessageNonColored));
                         }
 
                     } else {
@@ -173,15 +185,20 @@ public class ChatListener implements Listener, PluginMessageListener {
                 }
             } else if (subchannel.equalsIgnoreCase("StaffMessage")) {
                 String playerUUID = in.readUTF();
-                String messageFinalWithoutMessage = in.readUTF();
-                messageFinalWithoutMessage = format(messageFinalWithoutMessage);
+                TextComponent messageFinalWithoutMessage = format(in.readUTF());
                 String playerMessage = in.readUTF();
-                String messageFinalWithMessage = format(messageFinalWithoutMessage.replace("{message}", playerMessage));
 
-                plugin.getLogger().info(messageFinalWithMessage);
+                TextReplacementConfig textReplacementConfigMessageColored = TextReplacementConfig.builder()
+                        .matchLiteral("{message}")
+                        .replacement(format(playerMessage))
+                        .build();
+
+                TextComponent messageFinalWithMessage = (TextComponent) messageFinalWithoutMessage.replaceText(textReplacementConfigMessageColored);
+
+                plugin.getLogger().info(LegacyComponentSerializer.legacyAmpersand().serialize(messageFinalWithMessage));
                 for(Player player1 : plugin.getServer().getOnlinePlayers()) {
                     if(player1.hasPermission("fmessage.staffchat")) {
-                        player1.sendMessage(format(messageFinalWithMessage));
+                        player1.sendMessage(messageFinalWithMessage);
                     }
                 }
             } else if(subchannel.equalsIgnoreCase("song")) {
@@ -192,21 +209,7 @@ public class ChatListener implements Listener, PluginMessageListener {
             }
         }
     }
-    private String format(String msg) {
-        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-        if (Bukkit.getVersion().contains("1.16") || Bukkit.getVersion().contains("1.17")) {
-            Matcher match = pattern.matcher(msg);
-            while (match.find()) {
-
-                String color = msg.substring(match.start(), match.end());
-                String replace = color;
-                color = color.replace("{", "");
-                color = color.replace("}", "");
-                msg = msg.replace(replace, ChatColor.of(color) + "");
-                match = pattern.matcher(msg);
-
-            }
-        }
-        return ChatColor.translateAlternateColorCodes('&', msg);
+    private TextComponent format(String msg) {
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(msg);
     }
 }
