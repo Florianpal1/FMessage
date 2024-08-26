@@ -24,12 +24,14 @@ public class ChatConfig {
     private String ignoreFormat;
     private String floodFormat;
     private String spamFormat;
+    private String staffChatFormat;
 
     public void load(Configuration config) {
         chatFormat = config.getString("chatFormat");
         ignoreFormat = config.getString("ignoreFormat");
         floodFormat = config.getString("floodFormat");
         spamFormat = config.getString("spamFormat");
+        staffChatFormat = config.getString("staffChatFormat");
     }
 
     public String getChatFormat() {
@@ -46,5 +48,9 @@ public class ChatConfig {
 
     public String getSpamFormat() {
         return spamFormat;
+    }
+
+    public String getStaffChatFormat() {
+        return staffChatFormat;
     }
 }

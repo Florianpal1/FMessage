@@ -22,24 +22,39 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
-import com.velocitypowered.api.proxy.Player;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import fr.florianpal.fmessage.FMessage;
-import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
+import org.bukkit.entity.Player;
+
 
 @CommandAlias("mc|staffchat")
 public class StaffCommand extends BaseCommand {
     private final FMessage plugin;
-    private final CommandManager commandManager;
+
+    private static final String STAFF_CHAT = "StaffMessage";
 
     public StaffCommand(FMessage plugin) {
         this.plugin = plugin;
-        this.commandManager = plugin.getCommandManager();
     }
 
     @Default
     @CommandPermission("fmessage.staffchat")
-    @Description("{@@fmessage.msg_help_description}")
+    @Description("{@@fmessage.staffchat_help_description}")
     public void onStaffChat(Player playerSender, String message) {
 
+        System.out.println("test");
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("StaffMessage");
+        out.writeUTF(playerSender.getUniqueId().toString());
+
+        System.out.println("test");
+        String format = plugin.getConfigurationManager().getChat().getStaffChatFormat();
+        format = plugin.setPlaceHolders(playerSender, format);
+        System.out.println("test");
+        out.writeUTF(format.replace("{displayName}", playerSender.getDisplayName()));
+        out.writeUTF(message);
+        System.out.println("test");
+        playerSender.sendPluginMessage(plugin, "fmessage:chatbungee", out.toByteArray());
     }
 }

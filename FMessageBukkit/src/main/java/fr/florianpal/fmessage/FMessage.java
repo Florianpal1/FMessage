@@ -15,7 +15,9 @@
 
 package fr.florianpal.fmessage;
 
+import fr.florianpal.fmessage.commands.StaffCommand;
 import fr.florianpal.fmessage.listeners.ChatListener;
+import fr.florianpal.fmessage.managers.CommandManager;
 import fr.florianpal.fmessage.managers.ConfigurationManager;
 import fr.florianpal.fmessage.managers.VaultIntegrationManager;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -32,14 +34,22 @@ public class FMessage extends JavaPlugin {
     private ChatListener chatListener;
     private ConfigurationManager configurationManager;
     private VaultIntegrationManager vaultIntegrationManager;
+
+    private CommandManager commandManager;
     @Override
     public void onEnable() {
+        File languageFile = new File(getDataFolder(), "lang_fr.yml");
+        createDefaultConfiguration(languageFile, "lang_fr.yml");
+
         configurationManager = new ConfigurationManager(this);
 
         vaultIntegrationManager = new VaultIntegrationManager(this);
 
         chatListener = new ChatListener(this);
         Bukkit.getPluginManager().registerEvents(chatListener, this);
+
+        commandManager = new CommandManager(this);
+        commandManager.registerCommand(new StaffCommand(this));
 
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "fmessage:chatbungee");
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "fmessage:chatbukkit", chatListener);
@@ -110,5 +120,9 @@ public class FMessage extends JavaPlugin {
 
     public VaultIntegrationManager getVaultIntegrationManager() {
         return vaultIntegrationManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 }

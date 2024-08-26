@@ -63,9 +63,8 @@ public class MessageListener {
 
             String subchannel = in.readUTF();
             UUID uuid = UUID.fromString(in.readUTF());
-            String messageWithFormat = in.readUTF();
+            String formatWithPlaceholder = in.readUTF();
             String message = in.readUTF();
-            boolean colors = in.readBoolean();
 
             if (groupMemberCommandManager.alreadyToggle(uuid)) {
                 int id = groupMemberCommandManager.getGroupByToggle(plugin.getServer().getPlayer(uuid).get());
@@ -77,20 +76,24 @@ public class MessageListener {
                         plugin.getLogger().info("[{" + plugin.getGroups().get(id).getName() + "}] " + playerTarget.get().getUsername() + " : " + message);
                     }
                 }
-            } else if (plugin.isPlayerStaff(uuid)) {
+            } else if (subchannel.equals(STAFF_CHAT)) {
                 for (RegisteredServer entry : plugin.getServer().getAllServers()) {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF(STAFF_CHAT);
                     out.writeUTF(uuid.toString());
-                    out.writeUTF(messageWithFormat);
+                    out.writeUTF(formatWithPlaceholder);
+                    out.writeUTF(message);
                     entry.sendPluginMessage(FMessage.BUKKIT_CHAT, out.toByteArray());
                 }
             } else {
+
+                boolean colors = in.readBoolean();
                 for (RegisteredServer entry : plugin.getServer().getAllServers()) {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF(subchannel);
                     out.writeUTF(uuid.toString());
-                    out.writeUTF(messageWithFormat);
+                    out.writeUTF(formatWithPlaceholder);
+                    out.writeUTF(message);
                     List<UUID> ignores = new ArrayList<>(ignoreCommandManager.getAreIgnores(uuid));
 
                     String uuids = "";

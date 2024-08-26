@@ -22,6 +22,7 @@ public class ChatConfig {
     private String targetChatFormat;
     private String senderChatFormat;
     private String spyChatFormat;
+
     public void load(YamlDocument config) {
         targetChatFormat = config.getString("format.targetChatFormat");
         senderChatFormat = config.getString("format.senderChatFormat");
