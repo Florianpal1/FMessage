@@ -43,18 +43,14 @@ public class StaffCommand extends BaseCommand {
     @Description("{@@fmessage.staffchat_help_description}")
     public void onStaffChat(Player playerSender, String message) {
 
-        System.out.println("test");
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("StaffMessage");
         out.writeUTF(playerSender.getUniqueId().toString());
 
-        System.out.println("test");
         String format = plugin.getConfigurationManager().getChat().getStaffChatFormat();
         format = plugin.setPlaceHolders(playerSender, format);
-        System.out.println("test");
         out.writeUTF(format.replace("{displayName}", playerSender.getDisplayName()));
         out.writeUTF(message);
-        System.out.println("test");
         playerSender.sendPluginMessage(plugin, "fmessage:chatbungee", out.toByteArray());
     }
 }

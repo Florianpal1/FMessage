@@ -44,7 +44,7 @@ public class MSGSpyCommand extends BaseCommand {
     public void onMSGSpy(Player playerSender) {
         CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
         if(plugin.isPlayerSpy(playerSender.getUniqueId())) {
-            plugin.supPlayerSpy(playerSender.getUniqueId());
+            plugin.removePlayerSpy(playerSender.getUniqueId());
             issuerTarget.sendInfo(MessageKeys.SPY_DESACTIVATE);
         } else {
             plugin.addPlayerSpy(playerSender.getUniqueId());

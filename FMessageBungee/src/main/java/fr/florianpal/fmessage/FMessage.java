@@ -228,7 +228,7 @@ public class FMessage {
         return playerSpy.contains(player);
     }
 
-    public void supPlayerSpy(UUID player) {
+    public void removePlayerSpy(UUID player) {
         playerSpy.remove(player);
     }
 
