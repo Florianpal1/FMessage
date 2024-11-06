@@ -27,7 +27,9 @@ import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
+import fr.florianpal.fmessage.managers.commandManagers.NickNameCommandManager;
 import fr.florianpal.fmessage.utils.FormatUtil;
+import fr.florianpal.fmessage.utils.StringUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TextReplacementConfig;
@@ -41,11 +43,13 @@ public class MSGCommand extends BaseCommand {
     private final FMessage plugin;
     private final CommandManager commandManager;
     private final IgnoreCommandManager ignoreCommandManager;
+    private final NickNameCommandManager nickNameCommandManager;
 
     public MSGCommand(FMessage plugin) {
         this.plugin = plugin;
         this.commandManager = plugin.getCommandManager();
         this.ignoreCommandManager = plugin.getIgnoreCommandManager();
+        this.nickNameCommandManager = plugin.getNickNameCommandManager();
     }
 
     @Default
@@ -69,15 +73,18 @@ public class MSGCommand extends BaseCommand {
             } else {
 
                 TextComponent formatTarget = FormatUtil.format(plugin.getConfigurationManager().getChat().getTargetChatFormat());
+                String nickNameSender = nickNameCommandManager.getCachedNickName(playerSender.getUniqueId());
+                String nickNameTarget = nickNameCommandManager.getCachedNickName(playerTarget.getUniqueId());
+
 
                 TextReplacementConfig textReplacementConfigSender = TextReplacementConfig.builder()
                         .matchLiteral("{sender}")
-                        .replacement(playerSender.getUsername())
+                        .replacement(FormatUtil.format(StringUtils.isNullOrEmpty(nickNameSender) ? playerSender.getUsername() : nickNameSender))
                         .build();
 
                 TextReplacementConfig textReplacementConfigTarget = TextReplacementConfig.builder()
                         .matchLiteral("{target}")
-                        .replacement(playerTarget.getUsername())
+                        .replacement(FormatUtil.format(StringUtils.isNullOrEmpty(nickNameTarget) ? playerTarget.getUsername() : nickNameTarget))
                         .build();
 
                 formatTarget = (TextComponent) formatTarget.replaceText(textReplacementConfigSender);
