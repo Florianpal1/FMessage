@@ -33,6 +33,7 @@ import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.queries.GroupeMemberQueries;
 import fr.florianpal.fmessage.queries.GroupeQueries;
 import fr.florianpal.fmessage.queries.IgnoreQueries;
+import fr.florianpal.fmessage.queries.NickNameQueries;
 import org.slf4j.Logger;
 
 import java.io.*;
@@ -60,10 +61,13 @@ public class FMessage {
     private IgnoreCommandManager ignoreCommandManager;
     private GroupCommandManager groupCommandManager;
     private GroupMemberCommandManager groupMemberCommandManager;
+    private NickNameCommandManager nickNameCommandManager;
 
     private IgnoreQueries ignoreQueries;
     private GroupeQueries groupeQueries;
     private GroupeMemberQueries groupeMemberQueries;
+
+    private NickNameQueries nickNameQueries;
 
     private Map<Integer,Group> groups = new HashMap<>();
     private Map<UUID, List<UUID>> ignores = new HashMap<>();
@@ -100,15 +104,18 @@ public class FMessage {
         ignoreQueries = new IgnoreQueries(this);
         groupeQueries = new GroupeQueries(this);
         groupeMemberQueries = new GroupeMemberQueries(this);
+        nickNameQueries = new NickNameQueries(this);
 
         databaseManager.addRepository(ignoreQueries);
         databaseManager.addRepository(groupeQueries);
         databaseManager.addRepository(groupeMemberQueries);
+        databaseManager.addRepository(nickNameQueries);
         databaseManager.initializeTables();
 
         ignoreCommandManager = new IgnoreCommandManager(this);
         groupCommandManager = new GroupCommandManager(this);
         groupMemberCommandManager = new GroupMemberCommandManager(this);
+        nickNameCommandManager = new NickNameCommandManager(this);
 
         commandManager = new CommandManager(server, this);
         commandManager.registerDependency(ConfigurationManager.class, configurationManager);
@@ -123,6 +130,7 @@ public class FMessage {
         commandManager.registerCommand(new IgnoreCommand(this));
         commandManager.registerCommand(new UnIgnoreCommand(this));
         commandManager.registerCommand(new GroupCommand(this));
+        commandManager.registerCommand(new NickCommand(this));
 
         ignores = ignoreCommandManager.getIgnores();
         groups = groupCommandManager.getGroups();
@@ -292,5 +300,13 @@ public class FMessage {
 
     public Path getDataDirectory() {
         return dataDirectory;
+    }
+
+    public NickNameQueries getNickNameQueries() {
+        return nickNameQueries;
+    }
+
+    public NickNameCommandManager getNickNameCommandManager() {
+        return nickNameCommandManager;
     }
 }

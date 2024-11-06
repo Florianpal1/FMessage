@@ -56,9 +56,15 @@ public enum MessageKeys implements MessageKeyProvider {
 
     CANNOT_IGNORE,
 
-    IGNORE_NOT_EXIST;
+    IGNORE_NOT_EXIST,
 
-    private static final String PREFIX = "fmessage";
+    NICKNAME_REMOVE,
+
+    NICKNAME_ADD,
+
+    NICKNAME_UPDATE;
+
+    private static final String PREFIX = "acf-fmessage";
 
     private final MessageKey key = MessageKey.of(PREFIX + "." + this.name().toLowerCase());
 

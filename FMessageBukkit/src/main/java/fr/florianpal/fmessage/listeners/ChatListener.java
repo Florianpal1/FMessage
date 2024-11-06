@@ -20,6 +20,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.florianpal.fmessage.FMessage;
+import fr.florianpal.fmessage.utils.StringUtils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -82,13 +83,15 @@ public class ChatListener implements Listener, PluginMessageListener {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Message");
             out.writeUTF(e.getPlayer().getUniqueId().toString());
+            out.writeUTF(e.getPlayer().getDisplayName());
 
             String format = plugin.getConfigurationManager().getChat().getChatFormat();
             format = plugin.setPlaceHolders(e.getPlayer(), format);
 
-            out.writeUTF(format.replace("{displayName}", e.getPlayer().getDisplayName()));
+            out.writeUTF(format);
             out.writeUTF("" + e.getMessage());
             out.writeBoolean(plugin.getVaultIntegrationManager().getPerms().has(e.getPlayer(), "fmessage.colors"));
+            out.writeBoolean(plugin.getVaultIntegrationManager().getPerms().has(e.getPlayer(), "fmessage.nick.colors"));
             e.getPlayer().sendPluginMessage(plugin, "fmessage:chatbungee", out.toByteArray());
         }
     }
@@ -146,6 +149,8 @@ public class ChatListener implements Listener, PluginMessageListener {
 
             if (subchannel.equalsIgnoreCase("Message")) {
                 String playerUUID = in.readUTF();
+                String displayName = in.readUTF();
+                String nickName = in.readUTF();
                 TextComponent formatWithPlaceholder = format(in.readUTF());
                 String messageRecieved = in.readUTF();
 
@@ -159,6 +164,9 @@ public class ChatListener implements Listener, PluginMessageListener {
                 }
 
                 boolean colors = in.readBoolean();
+                boolean nickColors = in.readBoolean();
+
+                String finalName = StringUtils.isNullOrEmpty(nickName) ? displayName : nickName;
 
                 TextReplacementConfig textReplacementConfigMessageColored = TextReplacementConfig.builder()
                         .matchLiteral("{message}")
@@ -170,21 +178,40 @@ public class ChatListener implements Listener, PluginMessageListener {
                         .replacement(messageRecieved)
                         .build();
 
+                TextReplacementConfig textReplacementConfigNickNameColored = TextReplacementConfig.builder()
+                        .matchLiteral("{displayName}")
+                        .replacement(format(finalName))
+                        .build();
+
+                TextReplacementConfig textReplacementConfigNickNameNonColored = TextReplacementConfig.builder()
+                        .matchLiteral("{displayName}")
+                        .replacement(finalName)
+                        .build();
+
                 plugin.getLogger().info(LegacyComponentSerializer.legacyAmpersand().serialize(formatWithPlaceholder.replaceText(textReplacementConfigMessageColored)));
                 for(Player player1 : plugin.getServer().getOnlinePlayers()) {
                     if(!ignores.contains(player1.getUniqueId())) {
+
+                        if (nickColors) {
+                            formatWithPlaceholder = (TextComponent) formatWithPlaceholder.replaceText(textReplacementConfigNickNameColored);
+                        } else {
+                            formatWithPlaceholder = (TextComponent) formatWithPlaceholder.replaceText(textReplacementConfigNickNameNonColored);
+                        }
+
+
                         if(colors) {
                             player1.sendMessage(formatWithPlaceholder.replaceText(textReplacementConfigMessageColored));
                         } else {
                             player1.sendMessage(formatWithPlaceholder.replaceText(textReplacementConfigMessageNonColored));
                         }
-
                     } else {
                         player1.sendMessage(format(plugin.getConfigurationManager().getChat().getIgnoreFormat()));
                     }
                 }
             } else if (subchannel.equalsIgnoreCase("StaffMessage")) {
                 String playerUUID = in.readUTF();
+                String displayName = in.readUTF();
+                String nickName = in.readUTF();
                 TextComponent messageFinalWithoutMessage = format(in.readUTF());
                 String playerMessage = in.readUTF();
 
@@ -193,7 +220,15 @@ public class ChatListener implements Listener, PluginMessageListener {
                         .replacement(format(playerMessage))
                         .build();
 
+                String finalName = StringUtils.isNullOrEmpty(nickName) ? nickName : displayName;
+
+                TextReplacementConfig textReplacementConfigNickNameColored = TextReplacementConfig.builder()
+                        .matchLiteral("{displayName}")
+                        .replacement(format(finalName))
+                        .build();
+
                 TextComponent messageFinalWithMessage = (TextComponent) messageFinalWithoutMessage.replaceText(textReplacementConfigMessageColored);
+                messageFinalWithMessage = (TextComponent) messageFinalWithMessage.replaceText(textReplacementConfigNickNameColored);
 
                 plugin.getLogger().info(LegacyComponentSerializer.legacyAmpersand().serialize(messageFinalWithMessage));
                 for(Player player1 : plugin.getServer().getOnlinePlayers()) {

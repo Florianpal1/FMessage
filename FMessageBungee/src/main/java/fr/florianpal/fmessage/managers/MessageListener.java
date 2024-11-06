@@ -29,6 +29,7 @@ import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.GroupMemberCommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
+import fr.florianpal.fmessage.managers.commandManagers.NickNameCommandManager;
 import fr.florianpal.fmessage.objects.Member;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class MessageListener {
     private final FMessage plugin;
     private final GroupMemberCommandManager groupMemberCommandManager;
     private final IgnoreCommandManager ignoreCommandManager;
+    private final NickNameCommandManager nickNameCommandManager;
     private final CommandManager commandManager;
 
     private static final String STAFF_CHAT = "StaffMessage";
@@ -51,6 +53,7 @@ public class MessageListener {
         this.plugin = plugin;
         this.groupMemberCommandManager = plugin.getGroupMemberCommandManager();
         this.ignoreCommandManager = plugin.getIgnoreCommandManager();
+        this.nickNameCommandManager = plugin.getNickNameCommandManager();
         this.commandManager = plugin.getCommandManager();
     }
 
@@ -63,6 +66,8 @@ public class MessageListener {
 
             String subchannel = in.readUTF();
             UUID uuid = UUID.fromString(in.readUTF());
+            String displayName = in.readUTF();
+            String nickName = nickNameCommandManager.getCachedNickName(uuid);
             String formatWithPlaceholder = in.readUTF();
             String message = in.readUTF();
 
@@ -81,6 +86,8 @@ public class MessageListener {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF(STAFF_CHAT);
                     out.writeUTF(uuid.toString());
+                    out.writeUTF(displayName);
+                    out.writeUTF(nickName == null ? "" : nickName);
                     out.writeUTF(formatWithPlaceholder);
                     out.writeUTF(message);
                     entry.sendPluginMessage(FMessage.BUKKIT_CHAT, out.toByteArray());
@@ -88,10 +95,13 @@ public class MessageListener {
             } else {
 
                 boolean colors = in.readBoolean();
+                boolean nickColors = in.readBoolean();
                 for (RegisteredServer entry : plugin.getServer().getAllServers()) {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF(subchannel);
                     out.writeUTF(uuid.toString());
+                    out.writeUTF(displayName);
+                    out.writeUTF(nickName == null ? "" : nickName);
                     out.writeUTF(formatWithPlaceholder);
                     out.writeUTF(message);
                     List<UUID> ignores = new ArrayList<>(ignoreCommandManager.getAreIgnores(uuid));
@@ -102,6 +112,7 @@ public class MessageListener {
                     }
                     out.writeUTF(uuids);
                     out.writeBoolean(colors);
+                    out.writeBoolean(nickColors);
                     entry.sendPluginMessage(FMessage.BUKKIT_CHAT, out.toByteArray());
                 }
             }
