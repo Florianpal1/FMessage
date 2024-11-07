@@ -32,6 +32,8 @@ import fr.florianpal.fmessage.managers.commandManagers.GroupMemberCommandManager
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.objects.Member;
 
+import java.util.Optional;
+
 @CommandAlias("group")
 public class GroupCommand extends BaseCommand {
 
@@ -51,142 +53,174 @@ public class GroupCommand extends BaseCommand {
     @CommandPermission("fmessage.group.create")
     @Description("{@@fmessage.group_create_help_description}")
     public void onCreate(Player playerSender, String groupName) {
-        if(groupCommandManager.groupExist(playerSender, groupName)) {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.GROUP_ALREADY_EXIST, "{group}", groupName);
-        } else {
-            groupCommandManager.addGroup(playerSender, groupName);
-            int id_group = groupCommandManager.getGroupId(playerSender, groupName);
-            groupMemberCommandManager.addGroupMember(id_group, playerSender);
-            plugin.updateGroups();
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.GROUP_CREATE_SUCCESS, "{group}", groupName);
+
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
+        if (groupCommandManager.groupExist(playerSender, groupName)) {
+
+            issuerSender.sendInfo(MessageKeys.GROUP_ALREADY_EXIST, "{group}", groupName);
+            return;
         }
+
+        groupCommandManager.addGroup(playerSender, groupName);
+        int groupId = groupCommandManager.getGroupId(playerSender, groupName);
+        groupMemberCommandManager.addGroupMember(groupId, playerSender);
+        plugin.updateGroups();
+
+        issuerSender.sendInfo(MessageKeys.GROUP_CREATE_SUCCESS, "{group}", groupName);
     }
 
     @Subcommand("remove")
     @CommandPermission("fmessage.group.remove")
     @Description("{@@fmessage.group_create_help_description}")
     public void onRemove(Player playerSender, String groupName) {
-        if(groupCommandManager.groupExist(playerSender, groupName)) {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.GROUP_REMOVE_SUCCESS, "{group}", groupName);
-            int id_group = groupCommandManager.getGroupId(playerSender, groupName);
-            groupCommandManager.removeGroup(id_group);
-            groupMemberCommandManager.removeGroup(id_group);
+
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
+        if (groupCommandManager.groupExist(playerSender, groupName)) {
+
+            int groupId = groupCommandManager.getGroupId(playerSender, groupName);
+            groupCommandManager.removeGroup(groupId);
+            groupMemberCommandManager.removeGroup(groupId);
             plugin.updateGroups();
-        } else {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.GROUP_CANNOT_EXIST, "{group}", groupName);
+
+
+            issuerSender.sendInfo(MessageKeys.GROUP_REMOVE_SUCCESS, "{group}", groupName);
+            return;
         }
+
+        issuerSender.sendInfo(MessageKeys.GROUP_CANNOT_EXIST, "{group}", groupName);
     }
 
     @Subcommand("member add")
     @CommandPermission("fmessage.group.member.add")
     @Description("{@@fmessage.group_member_create_help_description}")
     public void onAddMember(Player playerSender, String groupName, String playerTargetName) {
-        Player playerTarget = plugin.getServer().getPlayer(playerTargetName).get();
+        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
-        if(playerTarget != null) {
-            if (groupCommandManager.groupExist(playerSender, groupName)) {
-                int id_group = groupCommandManager.getGroupId(playerSender, groupName);
-                if (groupMemberCommandManager.inGroup(id_group, playerSender)) {
-                    CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                    issuerTarget.sendInfo(MessageKeys.GROUP_ALREADY_IN_GROUP, "{group}", groupName, "{player}", playerTargetName);
-                } else {
-                    CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                    issuerTarget.sendInfo(MessageKeys.GROUP_ADDMEMBER_SUCCESS, "{group}", groupName, "{player}", playerTargetName);
-                    groupMemberCommandManager.addGroupMember(id_group, playerTarget);
-                    plugin.updateGroups();
-                }
+        if (playerTargetOptional.isEmpty()) {
 
-            } else {
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.GROUP_CANNOT_EXIST, "{group}", groupName);
-            }
-        } else {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.IGNORE_NOT_EXIST, "{player}", playerTargetName);
+            issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
+            return;
         }
+
+        Player playerTarget = playerTargetOptional.get();
+        if (groupCommandManager.groupExist(playerSender, groupName)) {
+
+            int groupId = groupCommandManager.getGroupId(playerSender, groupName);
+            if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
+
+                issuerSender.sendInfo(MessageKeys.GROUP_ALREADY_IN_GROUP, "{group}", groupName, "{player}", playerTargetName);
+                return;
+            }
+
+            groupMemberCommandManager.addGroupMember(groupId, playerTarget);
+            plugin.updateGroups();
+
+            issuerSender.sendInfo(MessageKeys.GROUP_ADDMEMBER_SUCCESS, "{group}", groupName, "{player}", playerTargetName);
+            return;
+        }
+
+        issuerSender.sendInfo(MessageKeys.GROUP_CANNOT_EXIST, "{group}", groupName);
     }
 
     @Subcommand("member kick")
     @CommandPermission("fmessage.group.member.kick")
     @Description("{@@fmessage.group_member_kickv_help_description}")
     public void onRemoveMember(Player playerSender, String groupName, String playerTargetName) {
-        Player playerTarget = plugin.getServer().getPlayer(playerTargetName).get();
-        if(playerTarget != null) {
-            if (groupCommandManager.groupExist(playerSender, groupName)) {
-                int id_group = groupCommandManager.getGroupId(playerSender, groupName);
-                if (groupMemberCommandManager.inGroup(id_group, playerSender)) {
-                    groupMemberCommandManager.removeGroupMember(id_group, playerTarget);
-                    plugin.updateGroups();
-                    CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                    issuerTarget.sendInfo(MessageKeys.GROUP_REMOVEMEMBER_SUCCESS);
-                } else {
-                    CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                    issuerTarget.sendInfo(MessageKeys.GROUP_MEMBER_NOT_INGROUP);
-                }
-            } else {
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.GROUP_CANNOT_EXIST);
-            }
-        } else {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.IGNORE_NOT_EXIST, "{player}", playerTargetName);
+
+        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
+
+        if (playerTargetOptional.isEmpty()) {
+
+            issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
+            return;
         }
+
+        Player playerTarget = playerTargetOptional.get();
+
+
+        if (groupCommandManager.groupExist(playerSender, groupName)) {
+
+            int groupId = groupCommandManager.getGroupId(playerSender, groupName);
+            if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
+
+                groupMemberCommandManager.removeGroupMember(groupId, playerTarget);
+                plugin.updateGroups();
+
+                issuerSender.sendInfo(MessageKeys.GROUP_REMOVEMEMBER_SUCCESS);
+                return;
+            }
+
+            issuerSender.sendInfo(MessageKeys.GROUP_MEMBER_NOT_INGROUP);
+            return;
+        }
+
+        issuerSender.sendInfo(MessageKeys.GROUP_CANNOT_EXIST);
     }
 
     @Subcommand("msg")
     @CommandPermission("fmessage.group.msg")
     @Description("{@@fmessage.group_msg_help_description}")
     public void onMSG(Player playerSender, String groupName, String message) {
+
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
+
         if (groupCommandManager.groupExist(groupName)) {
-            int id_group = groupCommandManager.getGroupId(groupName);
-            if (groupMemberCommandManager.inGroup(id_group, playerSender)) {
-                Group group = plugin.getGroups().get(id_group);
-                for(Member member : group.getMember()) {
-                    Player playerTarget = plugin.getServer().getPlayer(member.getUuid()).get();
-                    if(playerTarget != null) {
-                        CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerTarget);
-                        issuerTarget.sendInfo(MessageKeys.GROUP_MSG, "{group}", group.getName(), "{player}", playerSender.getUsername(), "{message}", message);
+            int groupId = groupCommandManager.getGroupId(groupName);
+            if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
+                Group group = plugin.getGroups().get(groupId);
+                for (Member member : group.getMember()) {
+                    Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(member.getUuid());
+
+                    if (playerTargetOptional.isEmpty()) {
+                        return;
                     }
+
+                    Player playerTarget = playerTargetOptional.get();
+
+                    CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerTarget);
+                    issuerTarget.sendInfo(MessageKeys.GROUP_MSG, "{group}", group.getName(), "{player}", playerSender.getUsername(), "{message}", message);
                 }
-            } else {
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.GROUP_MEMBER_NOT_INGROUP);
+                return;
             }
-        } else {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.GROUP_CANNOT_EXIST);
+
+            issuerSender.sendInfo(MessageKeys.GROUP_MEMBER_NOT_INGROUP);
+            return;
         }
+
+        issuerSender.sendInfo(MessageKeys.GROUP_CANNOT_EXIST);
     }
 
     @Subcommand("toggle")
     @CommandPermission("fmessage.group.toggle")
     @Description("{@@fmessage.group_toggle_help_description}")
     public void onToggle(Player playerSender, String groupName) {
+
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
+
         if (groupCommandManager.groupExist(groupName)) {
-            int id_group = groupCommandManager.getGroupId(groupName);
-            if (groupMemberCommandManager.inGroup(id_group, playerSender)) {
+
+            int groupId = groupCommandManager.getGroupId(groupName);
+            if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
+
                 if (groupMemberCommandManager.alreadyToggle(playerSender.getUniqueId())) {
-                    groupMemberCommandManager.setToggle(id_group, playerSender, 0);
-                    CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                    issuerTarget.sendInfo(MessageKeys.GROUP_TOGGLE_DESACTIVATE, "{group}", groupName);
-                } else {
-                    groupMemberCommandManager.setToggle(id_group, playerSender, 1);
-                    CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                    issuerTarget.sendInfo(MessageKeys.GROUP_TOGGLE_ACTIVATE, "{group}", groupName);
+
+                    groupMemberCommandManager.setToggle(groupId, playerSender, 0);
+
+                    issuerSender.sendInfo(MessageKeys.GROUP_TOGGLE_DESACTIVATE, "{group}", groupName);
+                    return;
                 }
+                groupMemberCommandManager.setToggle(groupId, playerSender, 1);
 
-            } else {
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.GROUP_MEMBER_NOT_INGROUP);
-
+                issuerSender.sendInfo(MessageKeys.GROUP_TOGGLE_ACTIVATE, "{group}", groupName);
+                return;
             }
-        } else {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.GROUP_CANNOT_EXIST);
+
+            issuerSender.sendInfo(MessageKeys.GROUP_MEMBER_NOT_INGROUP);
+            return;
         }
+
+        issuerSender.sendInfo(MessageKeys.GROUP_CANNOT_EXIST);
     }
 }

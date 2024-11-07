@@ -1,5 +1,7 @@
-chatFormat: "&7{displayName}&7: &r{message}"
-ignoreFormat: "&7Ceci est un message que vous avez décidé d'ignorer."
-floodFormat: "Votre message contient un flood. Il a été automatiquement supprimé."
-spamFormat: "Votre message contient trop de majuscules. Il a été automatiquement mit en minuscule."
-staffChatFormat: "[StaffChat] &7{displayName}&7: &r{message}"
+chatFormat:
+  general: "&7{displayName}&7: &r{message}"
+  staffChat: "[StaffChat] &7{displayName}&7: &r{message}"
+
+ignoreFormat: "&7This is a message you have decided to ignore."
+floodFormat: "Your message contains a flood. It was automatically deleted."
+spamFormat: "Your message contains too many uppercase letters. It has been automatically written in lower case."

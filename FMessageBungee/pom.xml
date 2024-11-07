@@ -6,7 +6,7 @@
 
     <groupId>fr.florianpal</groupId>
     <artifactId>FMessageVelocity</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <version>2.3</version>
     <build>
         <plugins>
             <plugin>

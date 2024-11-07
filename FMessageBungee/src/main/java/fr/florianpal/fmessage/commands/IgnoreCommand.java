@@ -25,6 +25,8 @@ import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
 
+import java.util.Optional;
+
 @CommandAlias("ignore")
 public class IgnoreCommand extends BaseCommand {
 
@@ -43,25 +45,31 @@ public class IgnoreCommand extends BaseCommand {
     @Description("{@@fmessage.ignore_help_description}")
     @CommandCompletion("@players")
     public void onIgnore(Player playerSender, String playerTargetName) {
-        Player playerTarget = plugin.getServer().getPlayer(playerTargetName).get();
+        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
-        if(playerTarget != null) {
-            if(playerTarget.hasPermission("fmessage.cannot_ignore")) {
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.CANNOT_IGNORE);
-            } else if(ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.IGNORE_ALREADY, "{player}",playerTargetName);
-            } else {
-                ignoreCommandManager.addIgnore(playerSender, playerTarget);
-                plugin.updateIgnores();
+        if (playerTargetOptional.isEmpty()) {
 
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.IGNORE_SUCCESS, "{player}",playerTargetName);
-            }
-        } else {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.IGNORE_NOT_EXIST, "{player}",playerTargetName);
+            issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
+            return;
         }
+        Player playerTarget = playerTargetOptional.get();
+
+        if (playerTarget.hasPermission("fmessage.cannot_ignore")) {
+
+            issuerSender.sendInfo(MessageKeys.CANNOT_IGNORE);
+            return;
+        }
+
+        if (ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
+
+            issuerSender.sendInfo(MessageKeys.IGNORE_ALREADY, "{player}", playerTargetName);
+            return;
+        }
+
+        ignoreCommandManager.addIgnore(playerSender, playerTarget);
+        plugin.updateIgnores();
+
+        issuerSender.sendInfo(MessageKeys.IGNORE_SUCCESS, "{player}", playerTargetName);
     }
 }

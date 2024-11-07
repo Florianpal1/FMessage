@@ -27,11 +27,12 @@ public class ChatConfig {
     private String staffChatFormat;
 
     public void load(Configuration config) {
-        chatFormat = config.getString("chatFormat");
+        chatFormat = config.getString("chatFormat.general");
+        staffChatFormat = config.getString("chatFormat.staffChat");
+
         ignoreFormat = config.getString("ignoreFormat");
         floodFormat = config.getString("floodFormat");
         spamFormat = config.getString("spamFormat");
-        staffChatFormat = config.getString("staffChatFormat");
     }
 
     public String getChatFormat() {

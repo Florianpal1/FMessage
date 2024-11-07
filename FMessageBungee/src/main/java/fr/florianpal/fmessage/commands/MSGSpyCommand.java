@@ -42,13 +42,15 @@ public class MSGSpyCommand extends BaseCommand {
     @CommandPermission("fmessage.chatspy")
     @Description("{@@fmessage.msgspy_help_description}")
     public void onMSGSpy(Player playerSender) {
-        CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-        if(plugin.isPlayerSpy(playerSender.getUniqueId())) {
+
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
+        if (plugin.isPlayerSpy(playerSender.getUniqueId())) {
             plugin.removePlayerSpy(playerSender.getUniqueId());
-            issuerTarget.sendInfo(MessageKeys.SPY_DESACTIVATE);
-        } else {
-            plugin.addPlayerSpy(playerSender.getUniqueId());
-            issuerTarget.sendInfo(MessageKeys.SPY_ACTIVATE);
+            issuerSender.sendInfo(MessageKeys.SPY_DESACTIVATE);
+            return;
         }
+
+        plugin.addPlayerSpy(playerSender.getUniqueId());
+        issuerSender.sendInfo(MessageKeys.SPY_ACTIVATE);
     }
 }

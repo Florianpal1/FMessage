@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
 public class ChatListener implements Listener, PluginMessageListener {
 
     private final FMessage plugin;
+
     public ChatListener(FMessage plugin) {
         this.plugin = plugin;
 
@@ -61,16 +62,16 @@ public class ChatListener implements Listener, PluginMessageListener {
 
         int nbr_maj = nbr_maj(e.getMessage());
         int nbr_min = nbr_min(e.getMessage());
-        double result = (double)(nbr_maj)/nbr_min;
+        double result = (double) (nbr_maj) / nbr_min;
 
 
-        if(unflood(e.getMessage())) {
+        if (unflood(e.getMessage())) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(plugin.getConfigurationManager().getChat().getFloodFormat());
         }
 
-        if(!e.isCancelled()) {
-            if(e.getMessage().length() > 3) {
+        if (!e.isCancelled()) {
+            if (e.getMessage().length() > 3) {
                 if (result > 1) {
                     e.getPlayer().sendMessage(plugin.getConfigurationManager().getChat().getSpamFormat());
 
@@ -97,10 +98,10 @@ public class ChatListener implements Listener, PluginMessageListener {
     }
 
     private static int nbr_min(String chaine) {
-        int compteur=0;
-        for(int i = 0; i<chaine.length(); i++){
+        int compteur = 0;
+        for (int i = 0; i < chaine.length(); i++) {
             char ch = chaine.charAt(i);
-            if(!(ch == ' ') && !(ch == '!') && !(ch == '?')) {
+            if (!(ch == ' ') && !(ch == '!') && !(ch == '?')) {
                 if (Character.isLowerCase(ch)) compteur++;
             }
         }
@@ -108,24 +109,22 @@ public class ChatListener implements Listener, PluginMessageListener {
     }
 
     private static int nbr_maj(String chaine) {
-        int compteur=0;
-        for(int i = 0; i<chaine.length(); i++){
+        int compteur = 0;
+        for (int i = 0; i < chaine.length(); i++) {
             char ch = chaine.charAt(i);
-            if(!(ch == ' ') && !(ch == '!') && !(ch == '?')) {
+            if (!(ch == ' ') && !(ch == '!') && !(ch == '?')) {
                 if (Character.isUpperCase(ch)) compteur++;
             }
         }
         return compteur;
     }
 
-    private boolean unflood(String msg)
-    {
+    private boolean unflood(String msg) {
         int tolerance = 7;
         char prev = msg.charAt(0);
         int occur = 1;
 
-        for (int i = 1; i < msg.length(); ++i)
-        {
+        for (int i = 1; i < msg.length(); ++i) {
             if (msg.charAt(i) == prev && prev != ' ') {
                 occur++;
             } else {
@@ -151,14 +150,14 @@ public class ChatListener implements Listener, PluginMessageListener {
                 String playerUUID = in.readUTF();
                 String displayName = in.readUTF();
                 String nickName = in.readUTF();
-                TextComponent formatWithPlaceholder = format(in.readUTF());
+                TextComponent formatWithPlaceholder = StringUtils.format(in.readUTF());
                 String messageRecieved = in.readUTF();
 
                 String[] uuids = in.readUTF().split(";");
                 List<UUID> ignores = new ArrayList<UUID>();
 
-                for(String uuid : uuids) {
-                    if(!uuid.equalsIgnoreCase("")) {
+                for (String uuid : uuids) {
+                    if (!uuid.equalsIgnoreCase("")) {
                         ignores.add(UUID.fromString(uuid));
                     }
                 }
@@ -168,83 +167,38 @@ public class ChatListener implements Listener, PluginMessageListener {
 
                 String finalName = StringUtils.isNullOrEmpty(nickName) ? displayName : nickName;
 
-                TextReplacementConfig textReplacementConfigMessageColored = TextReplacementConfig.builder()
-                        .matchLiteral("{message}")
-                        .replacement(format(messageRecieved))
-                        .build();
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    if (!ignores.contains(p.getUniqueId())) {
 
-                TextReplacementConfig textReplacementConfigMessageNonColored = TextReplacementConfig.builder()
-                        .matchLiteral("{message}")
-                        .replacement(messageRecieved)
-                        .build();
-
-                TextReplacementConfig textReplacementConfigNickNameColored = TextReplacementConfig.builder()
-                        .matchLiteral("{displayName}")
-                        .replacement(format(finalName))
-                        .build();
-
-                TextReplacementConfig textReplacementConfigNickNameNonColored = TextReplacementConfig.builder()
-                        .matchLiteral("{displayName}")
-                        .replacement(finalName)
-                        .build();
-
-                plugin.getLogger().info(LegacyComponentSerializer.legacyAmpersand().serialize(formatWithPlaceholder.replaceText(textReplacementConfigMessageColored)));
-                for(Player player1 : plugin.getServer().getOnlinePlayers()) {
-                    if(!ignores.contains(player1.getUniqueId())) {
-
-                        if (nickColors) {
-                            formatWithPlaceholder = (TextComponent) formatWithPlaceholder.replaceText(textReplacementConfigNickNameColored);
-                        } else {
-                            formatWithPlaceholder = (TextComponent) formatWithPlaceholder.replaceText(textReplacementConfigNickNameNonColored);
-                        }
-
-
-                        if(colors) {
-                            player1.sendMessage(formatWithPlaceholder.replaceText(textReplacementConfigMessageColored));
-                        } else {
-                            player1.sendMessage(formatWithPlaceholder.replaceText(textReplacementConfigMessageNonColored));
-                        }
+                        formatWithPlaceholder = StringUtils.replace(formatWithPlaceholder, "{displayName}", finalName, nickColors);
+                        p.sendMessage(StringUtils.replace(formatWithPlaceholder, "{message}", messageRecieved, colors));
                     } else {
-                        player1.sendMessage(format(plugin.getConfigurationManager().getChat().getIgnoreFormat()));
+                        p.sendMessage(StringUtils.format(plugin.getConfigurationManager().getChat().getIgnoreFormat()));
                     }
                 }
             } else if (subchannel.equalsIgnoreCase("StaffMessage")) {
                 String playerUUID = in.readUTF();
                 String displayName = in.readUTF();
                 String nickName = in.readUTF();
-                TextComponent messageFinalWithoutMessage = format(in.readUTF());
+                TextComponent messageFinalWithoutMessage = StringUtils.format(in.readUTF());
                 String playerMessage = in.readUTF();
-
-                TextReplacementConfig textReplacementConfigMessageColored = TextReplacementConfig.builder()
-                        .matchLiteral("{message}")
-                        .replacement(format(playerMessage))
-                        .build();
 
                 String finalName = StringUtils.isNullOrEmpty(nickName) ? nickName : displayName;
 
-                TextReplacementConfig textReplacementConfigNickNameColored = TextReplacementConfig.builder()
-                        .matchLiteral("{displayName}")
-                        .replacement(format(finalName))
-                        .build();
+                TextComponent messageFinalWithMessage = StringUtils.replace(messageFinalWithoutMessage, "{message}", playerMessage, true);
+                messageFinalWithMessage = StringUtils.replace(messageFinalWithMessage, "{displayName}", finalName, true);
 
-                TextComponent messageFinalWithMessage = (TextComponent) messageFinalWithoutMessage.replaceText(textReplacementConfigMessageColored);
-                messageFinalWithMessage = (TextComponent) messageFinalWithMessage.replaceText(textReplacementConfigNickNameColored);
-
-                plugin.getLogger().info(LegacyComponentSerializer.legacyAmpersand().serialize(messageFinalWithMessage));
-                for(Player player1 : plugin.getServer().getOnlinePlayers()) {
-                    if(player1.hasPermission("fmessage.staffchat")) {
-                        player1.sendMessage(messageFinalWithMessage);
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    if (p.hasPermission("fmessage.staffchat")) {
+                        p.sendMessage(messageFinalWithMessage);
                     }
                 }
-            } else if(subchannel.equalsIgnoreCase("song")) {
+            } else if (subchannel.equalsIgnoreCase("song")) {
                 String uuid = in.readUTF();
 
                 Sound sound = Sound.sound(Key.key("entity.wither.death"), Sound.Source.MUSIC, 1f, 1f);
                 Bukkit.getPlayer(UUID.fromString(uuid)).playSound(sound);
             }
         }
-    }
-    private TextComponent format(String msg) {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(msg);
     }
 }

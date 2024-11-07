@@ -26,6 +26,7 @@ import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @CommandAlias("unignore")
@@ -46,26 +47,32 @@ public class UnIgnoreCommand extends BaseCommand {
     @Description("{@@fmessage.unignore_help_description}")
     @CommandCompletion("@players")
     public void onUnIgnore(Player playerSender, String playerTargetName) {
-        Player playerTarget = plugin.getServer().getPlayer(playerTargetName).get();
-        if(playerTarget != null) {
-            if(ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.UNIGNORE_SUCCESS,"{player}",playerTargetName);
-                ignoreCommandManager.removeIgnore(playerSender, playerTarget);
+        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
-                UUID playerSenderUuid = playerSender.getUniqueId();
-                UUID playerTargetUuid = playerTarget.getUniqueId();
+        if (playerTargetOptional.isEmpty()) {
 
-                if (plugin.getIgnores().containsKey(playerSenderUuid)) {
-                    plugin.getIgnores().get(playerSenderUuid).remove(playerTargetUuid);
-                }
-            } else {
-                CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-                issuerTarget.sendInfo(MessageKeys.UNIGNORE_ALREADY,"{player}",playerTargetName);
-            }
-        } else {
-            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
-            issuerTarget.sendInfo(MessageKeys.IGNORE_NOT_EXIST,"{player}",playerTargetName);
+            issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
+            return;
         }
+        Player playerTarget = playerTargetOptional.get();
+
+        if (ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
+            CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
+            issuerTarget.sendInfo(MessageKeys.UNIGNORE_SUCCESS, "{player}", playerTargetName);
+            ignoreCommandManager.removeIgnore(playerSender, playerTarget);
+
+            UUID playerSenderUuid = playerSender.getUniqueId();
+            UUID playerTargetUuid = playerTarget.getUniqueId();
+
+            if (plugin.getIgnores().containsKey(playerSenderUuid)) {
+                plugin.getIgnores().get(playerSenderUuid).remove(playerTargetUuid);
+            }
+            return;
+        }
+
+        CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
+        issuerTarget.sendInfo(MessageKeys.UNIGNORE_ALREADY, "{player}", playerTargetName);
     }
+
 }

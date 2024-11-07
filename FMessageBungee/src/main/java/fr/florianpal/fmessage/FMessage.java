@@ -28,20 +28,19 @@ import fr.florianpal.fmessage.commands.*;
 import fr.florianpal.fmessage.managers.ConfigurationManager;
 import fr.florianpal.fmessage.managers.DatabaseManager;
 import fr.florianpal.fmessage.managers.MessageListener;
+import fr.florianpal.fmessage.managers.MessageManager;
 import fr.florianpal.fmessage.managers.commandManagers.*;
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.queries.GroupeMemberQueries;
 import fr.florianpal.fmessage.queries.GroupeQueries;
 import fr.florianpal.fmessage.queries.IgnoreQueries;
 import fr.florianpal.fmessage.queries.NickNameQueries;
+import fr.florianpal.fmessage.utils.FileUtils;
 import org.slf4j.Logger;
 
-import java.io.*;
-import java.net.URISyntaxException;
+import java.io.File;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 @Plugin(id = "fmessage", name = "FMessage", version = "1.0.0-SNAPSHOT",
         url = "https://florianpal.fr", description = "FMessage", authors = {"Florianpal"})
@@ -62,6 +61,7 @@ public class FMessage {
     private GroupCommandManager groupCommandManager;
     private GroupMemberCommandManager groupMemberCommandManager;
     private NickNameCommandManager nickNameCommandManager;
+    private MessageManager messageManager;
 
     private IgnoreQueries ignoreQueries;
     private GroupeQueries groupeQueries;
@@ -92,7 +92,7 @@ public class FMessage {
     public void onEnable(ProxyInitializeEvent event) {
 
         File languageFile = new File(dataDirectory.toFile(), "lang_fr.yml");
-        createDefaultConfiguration(languageFile, "lang_fr.yml");
+        FileUtils.createDefaultConfiguration(this, languageFile, "lang_fr.yml");
 
         server.getChannelRegistrar().register(BUKKIT_CHAT);
         server.getChannelRegistrar().register(BUNGEE_CHAT);
@@ -116,6 +116,7 @@ public class FMessage {
         groupCommandManager = new GroupCommandManager(this);
         groupMemberCommandManager = new GroupMemberCommandManager(this);
         nickNameCommandManager = new NickNameCommandManager(this);
+        messageManager = new MessageManager(this);
 
         commandManager = new CommandManager(server, this);
         commandManager.registerDependency(ConfigurationManager.class, configurationManager);
@@ -167,58 +168,7 @@ public class FMessage {
         return playerMessage.containsKey(proxiedPlayer.getUniqueId());
     }
 
-    public void createDefaultConfiguration(File actual, String defaultName) {
-        // Make parent directories
-        File parent = actual.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
 
-        if (actual.exists()) {
-            return;
-        }
-
-        InputStream input = null;
-        try {
-            JarFile file = new JarFile(new File(FMessage.class.getProtectionDomain().getCodeSource().getLocation().toURI()));
-            ZipEntry copy = file.getEntry(defaultName);
-            if (copy == null) throw new FileNotFoundException();
-            input = file.getInputStream(copy);
-        } catch (IOException e) {
-            getLogger().error("Unable to read default configuration: " + defaultName);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (input != null) {
-            FileOutputStream output = null;
-
-            try {
-                output = new FileOutputStream(actual);
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = input.read(buf)) > 0) {
-                    output.write(buf, 0, length);
-                }
-
-                getLogger().info("Default configuration file written: " + actual.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    input.close();
-                } catch (IOException ignored) {
-                }
-
-                try {
-                    if (output != null) {
-                        output.close();
-                    }
-                } catch (IOException ignored) {
-                }
-            }
-        }
-    }
 
     public List<UUID> getPlayerSpy() {
         return playerSpy;
@@ -308,5 +258,9 @@ public class FMessage {
 
     public NickNameCommandManager getNickNameCommandManager() {
         return nickNameCommandManager;
+    }
+
+    public MessageManager getMessageManager() {
+        return messageManager;
     }
 }

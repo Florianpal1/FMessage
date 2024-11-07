@@ -28,21 +28,23 @@ public class NickCommand extends BaseCommand {
     @CommandPermission("fmessage.nick")
     @Description("{@@fmessage.nick_help_description}")
     public void onNick(Player playerSender, @Optional String nickname) {
-        CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
+        CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
         if (StringUtils.isNullOrEmpty(nickname)) {
             nickNameCommandManager.removeNickName(playerSender);
-            issuerTarget.sendInfo(MessageKeys.NICKNAME_REMOVE);
-        } else {
-            String currentNickName = nickNameCommandManager.getCachedNickName(playerSender);
-
-            if (StringUtils.isNullOrEmpty(currentNickName)) {
-                nickNameCommandManager.addNickName(playerSender, nickname);
-                issuerTarget.sendInfo(MessageKeys.NICKNAME_ADD, "{NewNickName}", nickname);
-            } else {
-                nickNameCommandManager.updateNickName(playerSender, nickname);
-                issuerTarget.sendInfo(MessageKeys.NICKNAME_UPDATE, "{NewNickName}", nickname, "{OldNickName}", currentNickName);
-            }
+            issuerSender.sendInfo(MessageKeys.NICKNAME_REMOVE);
+            return;
         }
+        String currentNickName = nickNameCommandManager.getCachedNickName(playerSender);
+
+        if (StringUtils.isNullOrEmpty(currentNickName)) {
+            nickNameCommandManager.addNickName(playerSender, nickname);
+            issuerSender.sendInfo(MessageKeys.NICKNAME_ADD, "{NewNickName}", nickname);
+            return;
+        }
+
+        nickNameCommandManager.updateNickName(playerSender, nickname);
+        issuerSender.sendInfo(MessageKeys.NICKNAME_UPDATE, "{NewNickName}", nickname, "{OldNickName}", currentNickName);
     }
+
 }
