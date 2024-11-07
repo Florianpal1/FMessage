@@ -1,5 +1,5 @@
 version: 1
 database:
-  url: "jdbc:mysql://localhost:3306/test"
+  url: "jdbc:mariadb://localhost:3306/test"
   user: "root"
   password: ""
