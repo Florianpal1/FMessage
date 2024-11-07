@@ -35,6 +35,10 @@
                             <pattern>co.aikar.commands</pattern>
                             <shadedPattern>fr.florianpal.fmessage.acf</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>co.aikar.locales</pattern>
+                            <shadedPattern>fr.florianpal.fmessage.locales</shadedPattern> <!-- Replace this -->
+                        </relocation>
                     </relocations>
 
                 </configuration>
