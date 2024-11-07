@@ -46,7 +46,7 @@ public class StaffCommand extends BaseCommand {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("StaffMessage");
         out.writeUTF(playerSender.getUniqueId().toString());
-
+        out.writeUTF(playerSender.getName());
         String format = plugin.getConfigurationManager().getChat().getStaffChatFormat();
         format = plugin.setPlaceHolders(playerSender, format);
         out.writeUTF(format.replace("{displayName}", playerSender.getDisplayName()));

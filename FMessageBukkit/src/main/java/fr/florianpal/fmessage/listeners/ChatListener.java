@@ -193,11 +193,6 @@ public class ChatListener implements Listener, PluginMessageListener {
                         p.sendMessage(messageFinalWithMessage);
                     }
                 }
-            } else if (subchannel.equalsIgnoreCase("song")) {
-                String uuid = in.readUTF();
-
-                Sound sound = Sound.sound(Key.key("entity.wither.death"), Sound.Source.MUSIC, 1f, 1f);
-                Bukkit.getPlayer(UUID.fromString(uuid)).playSound(sound);
             }
         }
     }
