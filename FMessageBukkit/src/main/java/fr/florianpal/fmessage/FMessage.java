@@ -19,7 +19,6 @@ import fr.florianpal.fmessage.commands.StaffCommand;
 import fr.florianpal.fmessage.listeners.ChatListener;
 import fr.florianpal.fmessage.managers.CommandManager;
 import fr.florianpal.fmessage.managers.ConfigurationManager;
-import fr.florianpal.fmessage.managers.VaultIntegrationManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -33,9 +32,8 @@ public class FMessage extends JavaPlugin {
 
     private ChatListener chatListener;
     private ConfigurationManager configurationManager;
-    private VaultIntegrationManager vaultIntegrationManager;
-
     private CommandManager commandManager;
+
     @Override
     public void onEnable() {
 
@@ -43,8 +41,6 @@ public class FMessage extends JavaPlugin {
 
         File languageFile = new File(getDataFolder(), "lang_" + configurationManager.getChat().getLang() + ".yml");
         createDefaultConfiguration(languageFile, "lang_" + configurationManager.getChat().getLang() + ".yml");
-
-        vaultIntegrationManager = new VaultIntegrationManager(this);
 
         chatListener = new ChatListener(this);
         Bukkit.getPluginManager().registerEvents(chatListener, this);
@@ -117,10 +113,6 @@ public class FMessage extends JavaPlugin {
 
     public String setPlaceHolders(OfflinePlayer player, String message) {
         return PlaceholderAPI.setPlaceholders(player, message);
-    }
-
-    public VaultIntegrationManager getVaultIntegrationManager() {
-        return vaultIntegrationManager;
     }
 
     public CommandManager getCommandManager() {
