@@ -91,13 +91,13 @@ public class FMessage {
     @Subscribe
     public void onEnable(ProxyInitializeEvent event) {
 
-        File languageFile = new File(dataDirectory.toFile(), "lang_fr.yml");
-        FileUtils.createDefaultConfiguration(this, languageFile, "lang_fr.yml");
+        configurationManager = new ConfigurationManager(this);
+
+        File languageFile = new File(dataDirectory.toFile(), "lang_" + configurationManager.getChat().getLang() + ".yml");
+        FileUtils.createDefaultConfiguration(this, languageFile, "lang_" + configurationManager.getChat().getLang() + ".yml");
 
         server.getChannelRegistrar().register(BUKKIT_CHAT);
         server.getChannelRegistrar().register(BUNGEE_CHAT);
-
-        configurationManager = new ConfigurationManager(this);
 
         databaseManager = new DatabaseManager(this);
 

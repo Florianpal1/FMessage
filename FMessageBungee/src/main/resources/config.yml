@@ -1,4 +1,6 @@
 version: 1
+
+lang: "en"
 format:
   senderChatFormat: "&f[&7me &f => &7 {target}&f]&7: &r{message}"
   targetChatFormat: "&f[&7{sender} &f => &7 me&f]&7: &r{message}"

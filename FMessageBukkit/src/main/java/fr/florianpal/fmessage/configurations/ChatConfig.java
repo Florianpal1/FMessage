@@ -20,6 +20,8 @@ package fr.florianpal.fmessage.configurations;
 import org.bukkit.configuration.Configuration;
 
 public class ChatConfig {
+
+    private String lang;
     private String chatFormat;
     private String ignoreFormat;
     private String floodFormat;
@@ -27,6 +29,9 @@ public class ChatConfig {
     private String staffChatFormat;
 
     public void load(Configuration config) {
+
+        lang = config.getString("lang");
+
         chatFormat = config.getString("chatFormat.general");
         staffChatFormat = config.getString("chatFormat.staffChat");
 
@@ -53,5 +58,9 @@ public class ChatConfig {
 
     public String getStaffChatFormat() {
         return staffChatFormat;
+    }
+
+    public String getLang() {
+        return lang;
     }
 }

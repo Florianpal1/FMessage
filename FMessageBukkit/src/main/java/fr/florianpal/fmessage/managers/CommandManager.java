@@ -36,7 +36,7 @@ public class CommandManager extends PaperCommandManager {
         this.setFormat(MessageType.HELP, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.RED);
         this.setFormat(MessageType.ERROR, ChatColor.RED, ChatColor.GOLD);
         try {
-            this.getLocales().loadYamlLanguageFile("lang_fr.yml", Locale.FRENCH);
+            this.getLocales().loadYamlLanguageFile("lang_" + plugin.getConfigurationManager().getChat().getLang() + ".yml", Locale.FRENCH);
         } catch (IOException | InvalidConfigurationException e) {
             plugin.getLogger().severe("Failed to load ACF core language file");
             e.printStackTrace();

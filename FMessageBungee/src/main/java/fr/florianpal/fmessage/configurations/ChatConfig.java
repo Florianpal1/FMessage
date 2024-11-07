@@ -19,11 +19,14 @@ package fr.florianpal.fmessage.configurations;
 import dev.dejvokep.boostedyaml.YamlDocument;
 
 public class ChatConfig {
+
+    private String lang;
     private String targetChatFormat;
     private String senderChatFormat;
     private String spyChatFormat;
 
     public void load(YamlDocument config) {
+        lang = config.getString("lang");
         targetChatFormat = config.getString("format.targetChatFormat");
         senderChatFormat = config.getString("format.senderChatFormat");
         spyChatFormat = config.getString("format.spyChatFormat");
@@ -39,5 +42,9 @@ public class ChatConfig {
 
     public String getSpyChatFormat() {
         return spyChatFormat;
+    }
+
+    public String getLang() {
+        return lang;
     }
 }

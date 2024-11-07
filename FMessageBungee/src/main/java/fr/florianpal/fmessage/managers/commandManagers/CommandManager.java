@@ -47,7 +47,7 @@ public class CommandManager extends VelocityCommandManager {
         this.setFormat(MessageType.HELP, NamedTextColor.YELLOW, NamedTextColor.GOLD, NamedTextColor.RED);
         this.setFormat(MessageType.ERROR, NamedTextColor.RED, NamedTextColor.GOLD);
         try {
-            loadYamlLanguageFile(plugin, "lang_fr.yml", Locale.FRENCH);
+            loadYamlLanguageFile(plugin, "lang_" + plugin.getConfigurationManager().getChat().getLang() + ".yml", Locale.FRENCH);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

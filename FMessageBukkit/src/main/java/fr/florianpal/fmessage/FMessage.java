@@ -38,10 +38,11 @@ public class FMessage extends JavaPlugin {
     private CommandManager commandManager;
     @Override
     public void onEnable() {
-        File languageFile = new File(getDataFolder(), "lang_fr.yml");
-        createDefaultConfiguration(languageFile, "lang_fr.yml");
 
         configurationManager = new ConfigurationManager(this);
+
+        File languageFile = new File(getDataFolder(), "lang_" + configurationManager.getChat().getLang() + ".yml");
+        createDefaultConfiguration(languageFile, "lang_" + configurationManager.getChat().getLang() + ".yml");
 
         vaultIntegrationManager = new VaultIntegrationManager(this);
 

@@ -1,3 +1,5 @@
+lang: "en"
+
 chatFormat:
   general: "&7{displayName}&7: &r{message}"
   staffChat: "[StaffChat] &7{displayName}&7: &r{message}"
