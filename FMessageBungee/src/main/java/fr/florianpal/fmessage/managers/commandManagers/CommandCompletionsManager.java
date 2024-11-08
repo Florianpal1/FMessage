@@ -25,7 +25,7 @@ import fr.florianpal.fmessage.FMessage;
 import java.util.stream.Collectors;
 
 public class CommandCompletionsManager {
-    private FMessage plugin;
+    private final FMessage plugin;
 
     public CommandCompletionsManager(FMessage plugin) {
         this.plugin = plugin;

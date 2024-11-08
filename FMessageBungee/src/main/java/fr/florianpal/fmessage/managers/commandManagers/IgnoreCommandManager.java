@@ -26,11 +26,9 @@ import java.util.UUID;
 
 
 public class IgnoreCommandManager {
-    private FMessage plugin;
     private IgnoreQueries ignoreQueries;
 
     public IgnoreCommandManager(FMessage plugin) {
-        this.plugin = plugin;
         this.ignoreQueries = plugin.getIgnoreQueries();
     }
 

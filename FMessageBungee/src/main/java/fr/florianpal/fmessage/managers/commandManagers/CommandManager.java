@@ -23,12 +23,9 @@ import co.aikar.locales.MessageKey;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.block.implementation.Section;
-import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
 import dev.dejvokep.boostedyaml.route.Route;
 import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
-import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
-import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import fr.florianpal.fmessage.FMessage;
 import net.kyori.adventure.text.format.NamedTextColor;
 

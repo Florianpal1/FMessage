@@ -25,12 +25,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseManager {
-    private HikariConfig config = new HikariConfig();
-    private HikariDataSource ds;
-    private FMessage plugin;
-    private ArrayList<IDatabaseTable> repositories = new ArrayList<>();
+    private final HikariDataSource ds;
+    private final FMessage plugin;
+    private final ArrayList<IDatabaseTable> repositories = new ArrayList<>();
     public DatabaseManager(FMessage plugin) {
         this.plugin = plugin;
+        HikariConfig config = new HikariConfig();
         config.setJdbcUrl(  plugin.getConfigurationManager().getDatabase().getUrl() );
         config.setUsername( plugin.getConfigurationManager().getDatabase().getUser() );
         config.setPassword(  plugin.getConfigurationManager().getDatabase().getPassword() );
@@ -38,7 +38,7 @@ public class DatabaseManager {
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
         config.setDriverClassName("org.mariadb.jdbc.Driver");
-        ds = new HikariDataSource( config );
+        ds = new HikariDataSource(config);
     }
 
     public Connection getConnection() throws SQLException {

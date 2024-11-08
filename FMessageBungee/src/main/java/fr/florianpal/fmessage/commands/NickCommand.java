@@ -27,6 +27,7 @@ public class NickCommand extends BaseCommand {
     @Default
     @CommandPermission("fmessage.nick")
     @Description("{@@fmessage.nick_help_description}")
+    @Syntax("(nickname)")
     public void onNick(Player playerSender, @Optional String nickname) {
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 

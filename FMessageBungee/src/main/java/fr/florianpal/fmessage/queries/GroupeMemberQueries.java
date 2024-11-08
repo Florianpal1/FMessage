@@ -52,11 +52,11 @@ public class GroupeMemberQueries implements IDatabaseTable {
         this.databaseManager = plugin.getDatabaseManager();
     }
 
-    public void addGroupeMember(int id_group, Player player) {
+    public void addGroupeMember(int idGroup, Player player) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_GROUP_MEMBER);
-            statement.setInt(1, id_group);
+            statement.setInt(1, idGroup);
             statement.setString(2, player.getUniqueId().toString());
             statement.setInt(3, 0);
             statement.executeUpdate();
@@ -73,11 +73,11 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public void removeGroupe(int id_group) {
+    public void removeGroupe(int idGroup) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(REMOVE_GROUP);
-            statement.setInt(1, id_group);
+            statement.setInt(1, idGroup);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,11 +92,11 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public void removeGroupeMember(int id_group, Player player) {
+    public void removeGroupeMember(int idGroup, Player player) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(REMOVE_GROUP_MEMBER);
-            statement.setInt(1, id_group);
+            statement.setInt(1, idGroup);
             statement.setString(2, player.getUniqueId().toString());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -150,14 +150,14 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public boolean inGroupMembers(int id_group, Player proxiedPlayer) {
+    public boolean inGroupMembers(int idGroup, Player proxiedPlayer) {
 
         boolean retour = false;
         PreparedStatement statement = null;
         ResultSet result = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(GET_MEMBER);
-            statement.setInt(1, id_group);
+            statement.setInt(1, idGroup);
             statement.setString(2, proxiedPlayer.getUniqueId().toString());
             result = statement.executeQuery();
 
@@ -182,12 +182,12 @@ public class GroupeMemberQueries implements IDatabaseTable {
         return retour;
     }
 
-    public void setGroupeMemberToggle(int id_group, Player player, int toggle) {
+    public void setGroupeMemberToggle(int idGroup, Player player, int toggle) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(UPDATE_GROUP_MEMBER_TOGGLE);
             statement.setInt(1, toggle);
-            statement.setInt(2, id_group);
+            statement.setInt(2, idGroup);
             statement.setString(3, player.getUniqueId().toString());
 
             statement.executeUpdate();
@@ -204,14 +204,14 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public boolean getGroupeMemberToggle(int id_group, Player proxiedPlayer) {
+    public boolean getGroupeMemberToggle(int idGroup, Player proxiedPlayer) {
 
         boolean retour = false;
         PreparedStatement statement = null;
         ResultSet result = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(GET_TOGGLE);
-            statement.setInt(1, id_group);
+            statement.setInt(1, idGroup);
             statement.setString(2, proxiedPlayer.getUniqueId().toString());
             result = statement.executeQuery();
 

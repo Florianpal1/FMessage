@@ -44,6 +44,7 @@ public class IgnoreCommand extends BaseCommand {
     @CommandPermission("fmessage.ignore")
     @Description("{@@fmessage.ignore_help_description}")
     @CommandCompletion("@players")
+    @Syntax("[playerTargetName]")
     public void onIgnore(Player playerSender, String playerTargetName) {
         Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);

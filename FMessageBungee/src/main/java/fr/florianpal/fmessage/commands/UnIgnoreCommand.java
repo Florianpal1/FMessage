@@ -46,6 +46,7 @@ public class UnIgnoreCommand extends BaseCommand {
     @CommandPermission("fmessage.unignore")
     @Description("{@@fmessage.unignore_help_description}")
     @CommandCompletion("@players")
+    @Syntax("[playerTargetName]")
     public void onUnIgnore(Player playerSender, String playerTargetName) {
         Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);

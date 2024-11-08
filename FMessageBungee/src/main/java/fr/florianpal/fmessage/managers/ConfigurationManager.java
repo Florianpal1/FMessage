@@ -31,21 +31,14 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ConfigurationManager {
-    private FMessage core;
     private final DatabaseConfig database = new DatabaseConfig();
-    private final YamlDocument databaseConfig;
-
-    private File langFile;
-    private YamlDocument langConfig;
 
     private final ChatConfig chat = new ChatConfig();
-    private final YamlDocument chatConfig;
 
     public ConfigurationManager(FMessage core) {
-        this.core = core;
 
         try {
-            databaseConfig = YamlDocument.create(new File(core.getDataDirectory().toFile(), "database.yml"),
+            YamlDocument databaseConfig = YamlDocument.create(new File(core.getDataDirectory().toFile(), "database.yml"),
                     Objects.requireNonNull(getClass().getResourceAsStream("/database.yml")),
                     GeneralSettings.DEFAULT,
                     LoaderSettings.builder().setAutoUpdate(true).build(),
@@ -53,7 +46,7 @@ public class ConfigurationManager {
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).setOptionSorting(UpdaterSettings.DEFAULT_OPTION_SORTING).build()
             );
 
-            chatConfig = YamlDocument.create(new File(core.getDataDirectory().toFile(), "config.yml"),
+            YamlDocument chatConfig = YamlDocument.create(new File(core.getDataDirectory().toFile(), "config.yml"),
                     Objects.requireNonNull(getClass().getResourceAsStream("/config.yml")),
                     GeneralSettings.DEFAULT,
                     LoaderSettings.builder().setAutoUpdate(true).build(),

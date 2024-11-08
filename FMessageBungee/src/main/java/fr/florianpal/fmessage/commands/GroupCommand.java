@@ -19,10 +19,7 @@ package fr.florianpal.fmessage.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
@@ -52,6 +49,7 @@ public class GroupCommand extends BaseCommand {
     @Subcommand("create")
     @CommandPermission("fmessage.group.create")
     @Description("{@@fmessage.group_create_help_description}")
+    @Syntax("[groupName]")
     public void onCreate(Player playerSender, String groupName) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
@@ -72,6 +70,7 @@ public class GroupCommand extends BaseCommand {
     @Subcommand("remove")
     @CommandPermission("fmessage.group.remove")
     @Description("{@@fmessage.group_create_help_description}")
+    @Syntax("[groupName]")
     public void onRemove(Player playerSender, String groupName) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
@@ -93,6 +92,7 @@ public class GroupCommand extends BaseCommand {
     @Subcommand("member add")
     @CommandPermission("fmessage.group.member.add")
     @Description("{@@fmessage.group_member_create_help_description}")
+    @Syntax("[groupName] [playerTargetName]")
     public void onAddMember(Player playerSender, String groupName, String playerTargetName) {
         Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
@@ -126,6 +126,7 @@ public class GroupCommand extends BaseCommand {
     @Subcommand("member kick")
     @CommandPermission("fmessage.group.member.kick")
     @Description("{@@fmessage.group_member_kickv_help_description}")
+    @Syntax("[groupName] [playerTargetName]")
     public void onRemoveMember(Player playerSender, String groupName, String playerTargetName) {
 
         Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
@@ -162,6 +163,7 @@ public class GroupCommand extends BaseCommand {
     @Subcommand("msg")
     @CommandPermission("fmessage.group.msg")
     @Description("{@@fmessage.group_msg_help_description}")
+    @Syntax("[groupName] [message]")
     public void onMSG(Player playerSender, String groupName, String message) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
@@ -195,6 +197,7 @@ public class GroupCommand extends BaseCommand {
     @Subcommand("toggle")
     @CommandPermission("fmessage.group.toggle")
     @Description("{@@fmessage.group_toggle_help_description}")
+    @Syntax("[groupName]")
     public void onToggle(Player playerSender, String groupName) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);

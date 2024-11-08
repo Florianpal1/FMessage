@@ -1,8 +1,6 @@
 package fr.florianpal.fmessage.managers;
 
 import co.aikar.commands.CommandIssuer;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;

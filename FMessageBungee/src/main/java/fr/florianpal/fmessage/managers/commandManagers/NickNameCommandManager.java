@@ -26,13 +26,11 @@ import java.util.UUID;
 
 
 public class NickNameCommandManager {
-    private FMessage plugin;
-    private NickNameQueries nickNameQueries;
+    private final NickNameQueries nickNameQueries;
 
     private Map<UUID, String> nicknames = new HashMap<>();
 
     public NickNameCommandManager(FMessage plugin) {
-        this.plugin = plugin;
         this.nickNameQueries = plugin.getNickNameQueries();
         this.nicknames = getAllNickName();
     }

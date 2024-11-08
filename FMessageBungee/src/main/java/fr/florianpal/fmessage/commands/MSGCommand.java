@@ -20,24 +20,13 @@ package fr.florianpal.fmessage.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.MessageManager;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
-import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
-import fr.florianpal.fmessage.managers.commandManagers.NickNameCommandManager;
-import fr.florianpal.fmessage.utils.FormatUtil;
-import fr.florianpal.fmessage.utils.StringUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TextReplacementConfig;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @CommandAlias("m|msg")
 public class MSGCommand extends BaseCommand {
@@ -55,6 +44,7 @@ public class MSGCommand extends BaseCommand {
     @CommandPermission("fmessage.msg")
     @Description("{@@fmessage.msg_help_description}")
     @CommandCompletion("@players")
+    @Syntax("[groupName] [message]")
     public void onMSG(Player playerSender, String playerTargetName, String message) {
 
         Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);

@@ -19,26 +19,12 @@ package fr.florianpal.fmessage.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Description;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import co.aikar.commands.annotation.*;
 import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.MessageManager;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
-import fr.florianpal.fmessage.managers.commandManagers.NickNameCommandManager;
-import fr.florianpal.fmessage.utils.FormatUtil;
-import fr.florianpal.fmessage.utils.StringUtils;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TextReplacementConfig;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @CommandAlias("r")
 public class RCommand extends BaseCommand {
@@ -58,6 +44,7 @@ public class RCommand extends BaseCommand {
     @Default
     @CommandPermission("fmessage.r")
     @Description("{@@fmessage.r_help_description}")
+    @Syntax("[message]")
     public void onR(Player playerSender, String message) {
 
         if (!plugin.havePreviousPlayer(playerSender)) {

@@ -25,11 +25,9 @@ import java.util.Map;
 
 
 public class GroupCommandManager {
-    private FMessage plugin;
     private GroupeQueries groupeQueries;
 
     public GroupCommandManager(FMessage plugin) {
-        this.plugin = plugin;
         this.groupeQueries = plugin.getGroupeQueries();
     }
 

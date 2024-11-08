@@ -140,7 +140,8 @@ public class GroupeQueries implements IDatabaseTable {
                 if (statement != null) {
                     statement.close();
                 }
-            } catch (SQLException ignored) {
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
 
@@ -169,7 +170,8 @@ public class GroupeQueries implements IDatabaseTable {
                 if (statement != null) {
                     statement.close();
                 }
-            } catch (SQLException ignored) {
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
 
@@ -199,7 +201,8 @@ public class GroupeQueries implements IDatabaseTable {
                 if (statement != null) {
                     statement.close();
                 }
-            } catch (SQLException ignored) {
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
 
@@ -228,7 +231,8 @@ public class GroupeQueries implements IDatabaseTable {
                 if (statement != null) {
                     statement.close();
                 }
-            } catch (SQLException ignored) {
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
 
