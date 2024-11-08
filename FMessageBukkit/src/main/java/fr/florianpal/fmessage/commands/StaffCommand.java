@@ -18,10 +18,7 @@
 package fr.florianpal.fmessage.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.*;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.florianpal.fmessage.FMessage;
@@ -41,10 +38,11 @@ public class StaffCommand extends BaseCommand {
     @Default
     @CommandPermission("fmessage.staffchat")
     @Description("{@@fmessage.staffchat_help_description}")
+    @Syntax("[message]")
     public void onStaffChat(Player playerSender, String message) {
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("StaffMessage");
+        out.writeUTF(STAFF_CHAT);
         out.writeUTF(playerSender.getUniqueId().toString());
         out.writeUTF(playerSender.getName());
         String format = plugin.getConfigurationManager().getChat().getStaffChatFormat();

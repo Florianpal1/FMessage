@@ -41,7 +41,7 @@
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>fr.florianpal.fmessage.locales</shadedPattern> <!-- Replace this -->
+                            <shadedPattern>fr.florianpal.fmessage.locales</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
