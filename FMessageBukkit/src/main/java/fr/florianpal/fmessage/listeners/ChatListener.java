@@ -61,8 +61,8 @@ public class ChatListener implements Listener, PluginMessageListener {
             e.getPlayer().sendMessage(plugin.getConfigurationManager().getChat().getFloodFormat());
         }
 
-        if (!e.isCancelled() && !e.getPlayer().hasPermission("fmessage.bypass.spam")) {
-            if (e.getMessage().length() > 3) {
+        if (!e.isCancelled()) {
+            if (!e.getPlayer().hasPermission("fmessage.bypass.spam") && e.getMessage().length() > 3) {
                 if (result > 1) {
                     e.getPlayer().sendMessage(plugin.getConfigurationManager().getChat().getSpamFormat());
 
