@@ -36,6 +36,7 @@ import fr.florianpal.fmessage.queries.GroupeQueries;
 import fr.florianpal.fmessage.queries.IgnoreQueries;
 import fr.florianpal.fmessage.queries.NickNameQueries;
 import fr.florianpal.fmessage.utils.FileUtils;
+import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -49,6 +50,8 @@ public class FMessage {
     private final ProxyServer server;
 
     private final org.slf4j.Logger logger;
+
+    private final Metrics.Factory metricsFactory;
 
     private final Path dataDirectory;
 
@@ -82,14 +85,17 @@ public class FMessage {
 
 
     @Inject
-    public FMessage(ProxyServer proxyServer, org.slf4j.Logger logger, @DataDirectory Path dataDirectory) {
+    public FMessage(ProxyServer proxyServer, org.slf4j.Logger logger, Metrics.Factory metricsFactory, @DataDirectory Path dataDirectory) {
         this.server = proxyServer;
         this.logger = logger;
+        this.metricsFactory = metricsFactory;
         this.dataDirectory = dataDirectory;
     }
 
     @Subscribe
     public void onEnable(ProxyInitializeEvent event) {
+        int pluginId = 24047;
+        Metrics metrics = metricsFactory.make(this, pluginId);
 
         configurationManager = new ConfigurationManager(this);
 
