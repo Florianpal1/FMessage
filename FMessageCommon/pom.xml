@@ -10,7 +10,6 @@
         <version>${global.version}</version>
     </parent>
 
-    <groupId>fr.florianpal</groupId>
     <artifactId>FMessageCommon</artifactId>
     <version>${project.parent.version}</version>
     <build>
