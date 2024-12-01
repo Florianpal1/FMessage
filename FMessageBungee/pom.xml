@@ -148,7 +148,7 @@
         <dependency>
             <groupId>fr.florianpal</groupId>
             <artifactId>FMessageCommon</artifactId>
-            <version>2.4.3</version>
+            <version>${global.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
