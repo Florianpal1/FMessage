@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.florianpal</groupId>
-    <artifactId>FMessageVelocity</artifactId>
+    <artifactId>FMessageCommon</artifactId>
     <version>2.4.3</version>
     <build>
         <plugins>
@@ -29,24 +29,11 @@
                 <configuration>
                     <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
                     <relocations>
-                        <relocation>
-                            <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>fr.florianpal.fmessage.acf</shadedPattern>
-                        </relocation>
 
                         <relocation>
                             <pattern>org.mariadb.jdbc</pattern>
                             <!-- Replace this -->
                             <shadedPattern>fr.florianpal.fmessage.mysql</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>fr.florianpal.fmessage.locales</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <!-- Replace this with your package! -->
-                            <shadedPattern>fr.florianpal.fmessage.bstats</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -80,18 +67,6 @@
         </repository>
     </repositories>
     <dependencies>
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-velocity</artifactId>
-            <version>3.0.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.velocitypowered</groupId>
-            <artifactId>velocity-api</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
         <!--Hibernate Core-->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -124,24 +99,6 @@
             <groupId>dev.dejvokep</groupId>
             <artifactId>boosted-yaml</artifactId>
             <version>1.3.5</version>
-        </dependency>
-        <!--ACF-->
-        <dependency>
-            <groupId>co.aikar</groupId>
-            <artifactId>acf-velocity</artifactId>
-            <version>0.5.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>fr.florianpal</groupId>
-            <artifactId>FMessageCommon</artifactId>
-            <version>2.4.3</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

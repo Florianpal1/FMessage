@@ -97,7 +97,7 @@ public class FMessage {
         int pluginId = 24047;
         Metrics metrics = metricsFactory.make(this, pluginId);
 
-        configurationManager = new ConfigurationManager(this);
+        configurationManager = new ConfigurationManager(dataDirectory.toFile());
 
         File languageFile = new File(dataDirectory.toFile(), "lang_" + configurationManager.getChat().getLang() + ".yml");
         FileUtils.createDefaultConfiguration(this, languageFile, "lang_" + configurationManager.getChat().getLang() + ".yml");
@@ -105,12 +105,12 @@ public class FMessage {
         server.getChannelRegistrar().register(BUKKIT_CHAT);
         server.getChannelRegistrar().register(BUNGEE_CHAT);
 
-        databaseManager = new DatabaseManager(this);
+        databaseManager = new DatabaseManager(configurationManager);
 
-        ignoreQueries = new IgnoreQueries(this);
-        groupeQueries = new GroupeQueries(this);
-        groupeMemberQueries = new GroupeMemberQueries(this);
-        nickNameQueries = new NickNameQueries(this);
+        ignoreQueries = new IgnoreQueries(databaseManager);
+        groupeQueries = new GroupeQueries(databaseManager);
+        groupeMemberQueries = new GroupeMemberQueries(databaseManager);
+        nickNameQueries = new NickNameQueries(databaseManager);
 
         databaseManager.addRepository(ignoreQueries);
         databaseManager.addRepository(groupeQueries);
@@ -118,10 +118,10 @@ public class FMessage {
         databaseManager.addRepository(nickNameQueries);
         databaseManager.initializeTables();
 
-        ignoreCommandManager = new IgnoreCommandManager(this);
-        groupCommandManager = new GroupCommandManager(this);
-        groupMemberCommandManager = new GroupMemberCommandManager(this);
-        nickNameCommandManager = new NickNameCommandManager(this);
+        ignoreCommandManager = new IgnoreCommandManager(ignoreQueries);
+        groupCommandManager = new GroupCommandManager(groupeQueries);
+        groupMemberCommandManager = new GroupMemberCommandManager(groupeMemberQueries);
+        nickNameCommandManager = new NickNameCommandManager(nickNameQueries);
         messageManager = new MessageManager(this);
 
         commandManager = new CommandManager(server, this);

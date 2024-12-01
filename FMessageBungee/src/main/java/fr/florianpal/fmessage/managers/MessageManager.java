@@ -8,8 +8,6 @@ import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.NickNameCommandManager;
 import fr.florianpal.fmessage.utils.FormatUtil;
 import fr.florianpal.fmessage.utils.StringUtils;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;
@@ -33,11 +31,11 @@ public class MessageManager {
 
     public void sendMessage(ProxiedPlayer playerSender, ProxiedPlayer playerTarget, String message) {
 
-        if(ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
+        if(ignoreCommandManager.ignoreExist(playerSender.getUniqueId(), playerTarget.getUniqueId())) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
             issuerTarget.sendInfo(MessageKeys.SENDER_IGNORE_MESSAGE);
             return;
-        } else if(ignoreCommandManager.ignoreExist(playerTarget, playerSender)) {
+        } else if(ignoreCommandManager.ignoreExist(playerTarget.getUniqueId(), playerSender.getUniqueId())) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
             issuerTarget.sendInfo(MessageKeys.TARGET_IGNORE_MESSAGE);
             return;

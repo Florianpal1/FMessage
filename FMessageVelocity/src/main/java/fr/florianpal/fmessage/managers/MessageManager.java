@@ -34,11 +34,11 @@ public class MessageManager {
 
     public void sendMessage(Player playerSender, Player playerTarget, String message) {
 
-        if(ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
+        if(ignoreCommandManager.ignoreExist(playerSender.getUniqueId(), playerTarget.getUniqueId())) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
             issuerTarget.sendInfo(MessageKeys.SENDER_IGNORE_MESSAGE);
             return;
-        } else if(ignoreCommandManager.ignoreExist(playerTarget, playerSender)) {
+        } else if(ignoreCommandManager.ignoreExist(playerTarget.getUniqueId(), playerSender.getUniqueId())) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
             issuerTarget.sendInfo(MessageKeys.TARGET_IGNORE_MESSAGE);
             return;

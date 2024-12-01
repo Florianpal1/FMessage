@@ -16,8 +16,6 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
-import com.velocitypowered.api.proxy.Player;
-import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.queries.NickNameQueries;
 
 import java.util.HashMap;
@@ -30,17 +28,13 @@ public class NickNameCommandManager {
 
     private Map<UUID, String> nicknames = new HashMap<>();
 
-    public NickNameCommandManager(FMessage plugin) {
-        this.nickNameQueries = plugin.getNickNameQueries();
+    public NickNameCommandManager(NickNameQueries nickNameQueries) {
+        this.nickNameQueries = nickNameQueries;
         this.nicknames = getAllNickName();
     }
 
-    public String getNickName(Player playerSender) {
-        return nickNameQueries.getNickName(playerSender.getUniqueId());
-    }
-
-    public String getCachedNickName(Player playerSender) {
-        return nicknames.get(playerSender.getUniqueId());
+    public String getNickName(UUID playerSender) {
+        return nickNameQueries.getNickName(playerSender);
     }
 
     public String getCachedNickName(UUID playerSender) {
@@ -54,20 +48,20 @@ public class NickNameCommandManager {
         return nickNameQueries.getAllNickName();
     }
 
-    public void addNickName(Player playerSender, String name)  {
-        nickNameQueries.addNickName(playerSender.getUniqueId(), name);
-        nicknames.put(playerSender.getUniqueId(), name);
+    public void addNickName(UUID playerSender, String name)  {
+        nickNameQueries.addNickName(playerSender, name);
+        nicknames.put(playerSender, name);
     }
 
-    public void updateNickName(Player playerSender, String name)  {
-        nickNameQueries.updateNickName(playerSender.getUniqueId(), name);
-        nicknames.put(playerSender.getUniqueId(), name);
+    public void updateNickName(UUID playerSender, String name)  {
+        nickNameQueries.updateNickName(playerSender, name);
+        nicknames.put(playerSender, name);
     }
 
 
-    public void removeNickName(Player playerSender) {
-        nickNameQueries.removeNickName(playerSender.getUniqueId());
-        nicknames.remove(playerSender.getUniqueId());
+    public void removeNickName(UUID playerSender) {
+        nickNameQueries.removeNickName(playerSender);
+        nicknames.remove(playerSender);
     }
 
 }

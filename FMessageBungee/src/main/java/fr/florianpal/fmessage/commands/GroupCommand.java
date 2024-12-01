@@ -51,15 +51,15 @@ public class GroupCommand extends BaseCommand {
     public void onCreate(ProxiedPlayer playerSender, String groupName) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
-        if (groupCommandManager.groupExist(playerSender, groupName)) {
+        if (groupCommandManager.groupExist(playerSender.getUniqueId(), groupName)) {
 
             issuerSender.sendInfo(MessageKeys.GROUP_ALREADY_EXIST, "{group}", groupName);
             return;
         }
 
-        groupCommandManager.addGroup(playerSender, groupName);
-        int groupId = groupCommandManager.getGroupId(playerSender, groupName);
-        groupMemberCommandManager.addGroupMember(groupId, playerSender);
+        groupCommandManager.addGroup(playerSender.getUniqueId(), groupName);
+        int groupId = groupCommandManager.getGroupId(playerSender.getUniqueId(), groupName);
+        groupMemberCommandManager.addGroupMember(groupId, playerSender.getUniqueId());
         plugin.updateGroups();
 
         issuerSender.sendInfo(MessageKeys.GROUP_CREATE_SUCCESS, "{group}", groupName);
@@ -72,9 +72,9 @@ public class GroupCommand extends BaseCommand {
     public void onRemove(ProxiedPlayer playerSender, String groupName) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
-        if (groupCommandManager.groupExist(playerSender, groupName)) {
+        if (groupCommandManager.groupExist(playerSender.getUniqueId(), groupName)) {
 
-            int groupId = groupCommandManager.getGroupId(playerSender, groupName);
+            int groupId = groupCommandManager.getGroupId(playerSender.getUniqueId(), groupName);
             groupCommandManager.removeGroup(groupId);
             groupMemberCommandManager.removeGroup(groupId);
             plugin.updateGroups();
@@ -102,16 +102,16 @@ public class GroupCommand extends BaseCommand {
         }
 
         ProxiedPlayer playerTarget = playerTargetOptional;
-        if (groupCommandManager.groupExist(playerSender, groupName)) {
+        if (groupCommandManager.groupExist(playerSender.getUniqueId(), groupName)) {
 
-            int groupId = groupCommandManager.getGroupId(playerSender, groupName);
-            if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
+            int groupId = groupCommandManager.getGroupId(playerSender.getUniqueId(), groupName);
+            if (groupMemberCommandManager.inGroup(groupId, playerSender.getUniqueId())) {
 
                 issuerSender.sendInfo(MessageKeys.GROUP_ALREADY_IN_GROUP, "{group}", groupName, "{player}", playerTargetName);
                 return;
             }
 
-            groupMemberCommandManager.addGroupMember(groupId, playerTarget);
+            groupMemberCommandManager.addGroupMember(groupId, playerTarget.getUniqueId());
             plugin.updateGroups();
 
             issuerSender.sendInfo(MessageKeys.GROUP_ADDMEMBER_SUCCESS, "{group}", groupName, "{player}", playerTargetName);
@@ -139,12 +139,12 @@ public class GroupCommand extends BaseCommand {
         ProxiedPlayer playerTarget = playerTargetOptional;
 
 
-        if (groupCommandManager.groupExist(playerSender, groupName)) {
+        if (groupCommandManager.groupExist(playerSender.getUniqueId(), groupName)) {
 
-            int groupId = groupCommandManager.getGroupId(playerSender, groupName);
-            if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
+            int groupId = groupCommandManager.getGroupId(playerSender.getUniqueId(), groupName);
+            if (groupMemberCommandManager.inGroup(groupId, playerSender.getUniqueId())) {
 
-                groupMemberCommandManager.removeGroupMember(groupId, playerTarget);
+                groupMemberCommandManager.removeGroupMember(groupId, playerTarget.getUniqueId());
                 plugin.updateGroups();
 
                 issuerSender.sendInfo(MessageKeys.GROUP_REMOVEMEMBER_SUCCESS);
@@ -168,7 +168,7 @@ public class GroupCommand extends BaseCommand {
 
         if (groupCommandManager.groupExist(groupName)) {
             int groupId = groupCommandManager.getGroupId(groupName);
-            if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
+            if (groupMemberCommandManager.inGroup(groupId, playerSender.getUniqueId())) {
                 Group group = plugin.getGroups().get(groupId);
                 for (Member member : group.getMember()) {
                     ProxiedPlayer playerTargetOptional = plugin.getProxy().getPlayer(member.getUuid());
@@ -203,16 +203,16 @@ public class GroupCommand extends BaseCommand {
         if (groupCommandManager.groupExist(groupName)) {
 
             int groupId = groupCommandManager.getGroupId(groupName);
-            if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
+            if (groupMemberCommandManager.inGroup(groupId, playerSender.getUniqueId())) {
 
                 if (groupMemberCommandManager.alreadyToggle(playerSender.getUniqueId())) {
 
-                    groupMemberCommandManager.setToggle(groupId, playerSender, 0);
+                    groupMemberCommandManager.setToggle(groupId, playerSender.getUniqueId(), 0);
 
                     issuerSender.sendInfo(MessageKeys.GROUP_TOGGLE_DESACTIVATE, "{group}", groupName);
                     return;
                 }
-                groupMemberCommandManager.setToggle(groupId, playerSender, 1);
+                groupMemberCommandManager.setToggle(groupId, playerSender.getUniqueId(), 1);
 
                 issuerSender.sendInfo(MessageKeys.GROUP_TOGGLE_ACTIVATE, "{group}", groupName);
                 return;

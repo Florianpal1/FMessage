@@ -16,30 +16,29 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
-import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.queries.GroupeQueries;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Map;
+import java.util.UUID;
 
 
 public class GroupCommandManager {
     private GroupeQueries groupeQueries;
 
-    public GroupCommandManager(FMessage plugin) {
-        this.groupeQueries = plugin.getGroupeQueries();
+    public GroupCommandManager(GroupeQueries groupeQueries) {
+        this.groupeQueries = groupeQueries;
     }
 
     public Map<Integer, Group> getGroups() {
         return groupeQueries.getGroups();
     }
 
-    public void addGroup(ProxiedPlayer playerSender, String name)  {
+    public void addGroup(UUID playerSender, String name)  {
         groupeQueries.addGroupe(playerSender, name);
     }
 
-    public int getGroupId(ProxiedPlayer playerSender, String name)  {
+    public int getGroupId(UUID playerSender, String name)  {
         return groupeQueries.getGroupId(playerSender, name);
     }
     public int getGroupId(String name)  {
@@ -51,7 +50,7 @@ public class GroupCommandManager {
         groupeQueries.removeGroup(id_group);
     }
 
-    public boolean groupExist(ProxiedPlayer playerSender, String name) {
+    public boolean groupExist(UUID playerSender, String name) {
         return groupeQueries.groupExist(playerSender, name);
     }
 

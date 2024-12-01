@@ -62,13 +62,13 @@ public class IgnoreCommand extends BaseCommand {
             return;
         }
 
-        if (ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
+        if (ignoreCommandManager.ignoreExist(playerSender.getUniqueId(), playerTarget.getUniqueId())) {
 
             issuerSender.sendInfo(MessageKeys.IGNORE_ALREADY, "{player}", playerTargetName);
             return;
         }
 
-        ignoreCommandManager.addIgnore(playerSender, playerTarget);
+        ignoreCommandManager.addIgnore(playerSender.getUniqueId(), playerTarget.getUniqueId());
         plugin.updateIgnores();
 
         issuerSender.sendInfo(MessageKeys.IGNORE_SUCCESS, "{player}", playerTargetName);

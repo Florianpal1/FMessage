@@ -16,12 +16,10 @@
 
 package fr.florianpal.fmessage.queries;
 
-import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.objects.Member;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,16 +46,16 @@ public class GroupeMemberQueries implements IDatabaseTable {
 
     private final DatabaseManager databaseManager;
 
-    public GroupeMemberQueries(FMessage plugin) {
-        this.databaseManager = plugin.getDatabaseManager();
+    public GroupeMemberQueries(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
     }
 
-    public void addGroupeMember(int idGroup, ProxiedPlayer player) {
+    public void addGroupeMember(int idGroup, UUID player) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_GROUP_MEMBER);
             statement.setInt(1, idGroup);
-            statement.setString(2, player.getUniqueId().toString());
+            statement.setString(2, player.toString());
             statement.setInt(3, 0);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -92,12 +90,12 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public void removeGroupeMember(int idGroup, ProxiedPlayer player) {
+    public void removeGroupeMember(int idGroup, UUID player) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(REMOVE_GROUP_MEMBER);
             statement.setInt(1, idGroup);
-            statement.setString(2, player.getUniqueId().toString());
+            statement.setString(2, player.toString());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -150,7 +148,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public boolean inGroupMembers(int idGroup, ProxiedPlayer proxiedPlayer) {
+    public boolean inGroupMembers(int idGroup, UUID proxiedPlayer) {
 
         boolean retour = false;
         PreparedStatement statement = null;
@@ -158,7 +156,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(GET_MEMBER);
             statement.setInt(1, idGroup);
-            statement.setString(2, proxiedPlayer.getUniqueId().toString());
+            statement.setString(2, proxiedPlayer.toString());
             result = statement.executeQuery();
 
             if (result.next()) {
@@ -182,13 +180,13 @@ public class GroupeMemberQueries implements IDatabaseTable {
         return retour;
     }
 
-    public void setGroupeMemberToggle(int idGroup, ProxiedPlayer player, int toggle) {
+    public void setGroupeMemberToggle(int idGroup, UUID player, int toggle) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(UPDATE_GROUP_MEMBER_TOGGLE);
             statement.setInt(1, toggle);
             statement.setInt(2, idGroup);
-            statement.setString(3, player.getUniqueId().toString());
+            statement.setString(3, player.toString());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -204,7 +202,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public boolean getGroupeMemberToggle(int idGroup, ProxiedPlayer proxiedPlayer) {
+    public boolean getGroupeMemberToggle(int idGroup, UUID proxiedPlayer) {
 
         boolean retour = false;
         PreparedStatement statement = null;
@@ -212,7 +210,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(GET_TOGGLE);
             statement.setInt(1, idGroup);
-            statement.setString(2, proxiedPlayer.getUniqueId().toString());
+            statement.setString(2, proxiedPlayer.toString());
             result = statement.executeQuery();
 
             if (result.next()) {
@@ -274,14 +272,14 @@ public class GroupeMemberQueries implements IDatabaseTable {
         return retour;
     }
 
-    public int getGroupByToggle(ProxiedPlayer proxiedPlayer) {
+    public int getGroupByToggle(UUID proxiedPlayer) {
 
         int id = -1;
         PreparedStatement statement = null;
         ResultSet result = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(GET_GROUP_BY_TOGGLE);
-            statement.setString(1, proxiedPlayer.getUniqueId().toString());
+            statement.setString(1, proxiedPlayer.toString());
             result = statement.executeQuery();
 
             while (result.next()) {

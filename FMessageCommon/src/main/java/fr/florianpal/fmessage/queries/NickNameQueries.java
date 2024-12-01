@@ -16,7 +16,6 @@
 
 package fr.florianpal.fmessage.queries;
 
-import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
 
@@ -39,8 +38,8 @@ public class NickNameQueries implements IDatabaseTable {
 
     private final DatabaseManager databaseManager;
 
-    public NickNameQueries(FMessage plugin) {
-        this.databaseManager = plugin.getDatabaseManager();
+    public NickNameQueries(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
     }
 
     public void addNickName(UUID uuid, String name) {

@@ -16,10 +16,8 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
-import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.queries.GroupeMemberQueries;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;
 
@@ -27,32 +25,32 @@ import java.util.UUID;
 public class GroupMemberCommandManager {
     private final GroupeMemberQueries groupeMemberQueries;
 
-    public GroupMemberCommandManager(FMessage plugin) {
-        this.groupeMemberQueries = plugin.getGroupeMemberQueries();
+    public GroupMemberCommandManager(GroupeMemberQueries groupeMemberQueries) {
+        this.groupeMemberQueries = groupeMemberQueries;
     }
 
     public void setGroupsMembers(Group group) {
         groupeMemberQueries.setGroupMembers(group);
     }
 
-    public void addGroupMember(int idGroup, ProxiedPlayer playerTarget)  {
+    public void addGroupMember(int idGroup, UUID playerTarget)  {
         groupeMemberQueries.addGroupeMember(idGroup, playerTarget);
     }
 
 
-    public void removeGroupMember(int idGroup, ProxiedPlayer playerTarget) {
+    public void removeGroupMember(int idGroup, UUID playerTarget) {
         groupeMemberQueries.removeGroupeMember(idGroup, playerTarget);
     }
 
-    public boolean inGroup(int idGroup, ProxiedPlayer playerTarget) {
+    public boolean inGroup(int idGroup, UUID playerTarget) {
         return groupeMemberQueries.inGroupMembers(idGroup, playerTarget);
     }
 
-    public boolean getToggle(int idGroup, ProxiedPlayer playerTarget) {
+    public boolean getToggle(int idGroup, UUID playerTarget) {
         return groupeMemberQueries.getGroupeMemberToggle(idGroup, playerTarget);
     }
 
-    public int getGroupByToggle(ProxiedPlayer playerTarget) {
+    public int getGroupByToggle(UUID playerTarget) {
         return groupeMemberQueries.getGroupByToggle(playerTarget);
     }
 
@@ -60,8 +58,8 @@ public class GroupMemberCommandManager {
         return groupeMemberQueries.alreadyToggle(playerTarget);
     }
 
-    public void setToggle(int idGroup, ProxiedPlayer playerTarget, int toggle) {
-        groupeMemberQueries.setGroupeMemberToggle(idGroup, playerTarget,toggle);
+    public void setToggle(int idGroup, UUID playerTarget, int toggle) {
+        groupeMemberQueries.setGroupeMemberToggle(idGroup, playerTarget, toggle);
     }
 
     public void removeGroup(int idGroup) {

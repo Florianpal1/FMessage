@@ -16,10 +16,8 @@
 
 package fr.florianpal.fmessage.queries;
 
-import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,16 +35,16 @@ public class IgnoreQueries implements IDatabaseTable {
 
     private final DatabaseManager databaseManager;
 
-    public IgnoreQueries(FMessage plugin) {
-        this.databaseManager = plugin.getDatabaseManager();
+    public IgnoreQueries(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
     }
 
-    public void addIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
+    public void addIgnore(UUID playerSender, UUID playerTarget) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_IGNORE);
-            statement.setString(1, playerSender.getUniqueId().toString());
-            statement.setString(2, playerTarget.getUniqueId().toString());
+            statement.setString(1, playerSender.toString());
+            statement.setString(2, playerTarget.toString());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,12 +59,12 @@ public class IgnoreQueries implements IDatabaseTable {
         }
     }
 
-    public void removeIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
+    public void removeIgnore(UUID playerSender, UUID playerTarget) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(REMOVE_IGNORE);
-            statement.setString(1, playerSender.getUniqueId().toString());
-            statement.setString(2, playerTarget.getUniqueId().toString());
+            statement.setString(1, playerSender.toString());
+            statement.setString(2, playerTarget.toString());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -152,14 +150,14 @@ public class IgnoreQueries implements IDatabaseTable {
         return ignores;
     }
 
-    public boolean ignoreExist(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
+    public boolean ignoreExist(UUID playerSender, UUID playerTarget) {
         PreparedStatement statement = null;
         ResultSet result = null;
         boolean retour = false;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(GET_IGNORE);
-            statement.setString(1, playerSender.getUniqueId().toString());
-            statement.setString(2, playerTarget.getUniqueId().toString());
+            statement.setString(1, playerSender.toString());
+            statement.setString(2, playerTarget.toString());
             result = statement.executeQuery();
 
             if (result.next()) {

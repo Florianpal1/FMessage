@@ -34,7 +34,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.*;
 
 public class FMessage extends Plugin {
@@ -72,7 +71,7 @@ public class FMessage extends Plugin {
         int pluginId = 24047;
         Metrics metrics = new Metrics(this, pluginId);
 
-        configurationManager = new ConfigurationManager(this);
+        configurationManager = new ConfigurationManager(getDataFolder());
 
         File languageFile = new File(getDataFolder(), "lang_" + configurationManager.getChat().getLang() + ".yml");
         FileUtils.createDefaultConfiguration(this, languageFile, "lang_" + configurationManager.getChat().getLang() + ".yml");
@@ -80,12 +79,12 @@ public class FMessage extends Plugin {
         getProxy().registerChannel(BUKKIT_CHAT);
         getProxy().registerChannel(BUNGEE_CHAT);
 
-        databaseManager = new DatabaseManager(this);
+        databaseManager = new DatabaseManager(configurationManager);
 
-        ignoreQueries = new IgnoreQueries(this);
-        groupeQueries = new GroupeQueries(this);
-        groupeMemberQueries = new GroupeMemberQueries(this);
-        nickNameQueries = new NickNameQueries(this);
+        ignoreQueries = new IgnoreQueries(databaseManager);
+        groupeQueries = new GroupeQueries(databaseManager);
+        groupeMemberQueries = new GroupeMemberQueries(databaseManager);
+        nickNameQueries = new NickNameQueries(databaseManager);
 
         databaseManager.addRepository(ignoreQueries);
         databaseManager.addRepository(groupeQueries);
@@ -93,10 +92,10 @@ public class FMessage extends Plugin {
         databaseManager.addRepository(nickNameQueries);
         databaseManager.initializeTables();
 
-        ignoreCommandManager = new IgnoreCommandManager(this);
-        groupCommandManager = new GroupCommandManager(this);
-        groupMemberCommandManager = new GroupMemberCommandManager(this);
-        nickNameCommandManager = new NickNameCommandManager(this);
+        ignoreCommandManager = new IgnoreCommandManager(ignoreQueries);
+        groupCommandManager = new GroupCommandManager(groupeQueries);
+        groupMemberCommandManager = new GroupMemberCommandManager(groupeMemberQueries);
+        nickNameCommandManager = new NickNameCommandManager(nickNameQueries);
         messageManager = new MessageManager(this);
 
         commandManager = new CommandManager(this);

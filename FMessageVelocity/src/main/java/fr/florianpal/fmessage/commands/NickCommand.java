@@ -32,19 +32,19 @@ public class NickCommand extends BaseCommand {
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
         if (StringUtils.isNullOrEmpty(nickname)) {
-            nickNameCommandManager.removeNickName(playerSender);
+            nickNameCommandManager.removeNickName(playerSender.getUniqueId());
             issuerSender.sendInfo(MessageKeys.NICKNAME_REMOVE);
             return;
         }
-        String currentNickName = nickNameCommandManager.getCachedNickName(playerSender);
+        String currentNickName = nickNameCommandManager.getCachedNickName(playerSender.getUniqueId());
 
         if (StringUtils.isNullOrEmpty(currentNickName)) {
-            nickNameCommandManager.addNickName(playerSender, nickname);
+            nickNameCommandManager.addNickName(playerSender.getUniqueId(), nickname);
             issuerSender.sendInfo(MessageKeys.NICKNAME_ADD, "{NewNickName}", nickname);
             return;
         }
 
-        nickNameCommandManager.updateNickName(playerSender, nickname);
+        nickNameCommandManager.updateNickName(playerSender.getUniqueId(), nickname);
         issuerSender.sendInfo(MessageKeys.NICKNAME_UPDATE, "{NewNickName}", nickname, "{OldNickName}", currentNickName);
     }
 

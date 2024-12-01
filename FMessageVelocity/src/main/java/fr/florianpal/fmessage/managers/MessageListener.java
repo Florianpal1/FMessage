@@ -72,7 +72,7 @@ public class MessageListener {
             String message = in.readUTF();
 
             if (groupMemberCommandManager.alreadyToggle(uuid)) {
-                int id = groupMemberCommandManager.getGroupByToggle(plugin.getServer().getPlayer(uuid).get());
+                int id = groupMemberCommandManager.getGroupByToggle(uuid);
                 for (Member member : plugin.getGroups().get(id).getMember()) {
                     Optional<Player> playerTarget = plugin.getServer().getPlayer(member.getUuid());
                     if (playerTarget.isPresent()) {

@@ -57,10 +57,10 @@ public class UnIgnoreCommand extends BaseCommand {
         }
         ProxiedPlayer playerTarget = playerTargetOptional;
 
-        if (ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
+        if (ignoreCommandManager.ignoreExist(playerSender.getUniqueId(), playerTarget.getUniqueId())) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
             issuerTarget.sendInfo(MessageKeys.UNIGNORE_SUCCESS, "{player}", playerTargetName);
-            ignoreCommandManager.removeIgnore(playerSender, playerTarget);
+            ignoreCommandManager.removeIgnore(playerSender.getUniqueId(), playerTarget.getUniqueId());
 
             UUID playerSenderUuid = playerSender.getUniqueId();
             UUID playerTargetUuid = playerTarget.getUniqueId();

@@ -16,11 +16,9 @@
 
 package fr.florianpal.fmessage.queries;
 
-import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
 import fr.florianpal.fmessage.objects.Group;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,15 +39,15 @@ public class GroupeQueries implements IDatabaseTable {
 
     private final DatabaseManager databaseManager;
 
-    public GroupeQueries(FMessage plugin) {
-        this.databaseManager = plugin.getDatabaseManager();
+    public GroupeQueries(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
     }
 
-    public void addGroupe(ProxiedPlayer playerSender, String name) {
+    public void addGroupe(UUID playerSender, String name) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_GROUP);
-            statement.setString(1, playerSender.getUniqueId().toString());
+            statement.setString(1, playerSender.toString());
             statement.setString(2, name);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -117,13 +115,13 @@ public class GroupeQueries implements IDatabaseTable {
         return groups;
     }
 
-    public int getGroupId(ProxiedPlayer playerSender, String name) {
+    public int getGroupId(UUID playerSender, String name) {
         PreparedStatement statement = null;
         ResultSet result = null;
         int id = -1;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(GET_GROUP);
-            statement.setString(1, playerSender.getUniqueId().toString());
+            statement.setString(1, playerSender.toString());
             statement.setString(2, name);
             result = statement.executeQuery();
 
@@ -178,13 +176,13 @@ public class GroupeQueries implements IDatabaseTable {
         return id;
     }
 
-    public boolean groupExist(ProxiedPlayer playerSender, String name) {
+    public boolean groupExist(UUID playerSender, String name) {
         PreparedStatement statement = null;
         ResultSet result = null;
         boolean retour = false;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(GET_GROUP);
-            statement.setString(1, playerSender.getUniqueId().toString());
+            statement.setString(1, playerSender.toString());
             statement.setString(2, name);
             result = statement.executeQuery();
 

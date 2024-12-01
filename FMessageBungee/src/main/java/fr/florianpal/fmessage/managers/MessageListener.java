@@ -73,7 +73,7 @@ public class MessageListener implements Listener {
             String message = in.readUTF();
 
             if (groupMemberCommandManager.alreadyToggle(uuid)) {
-                int id = groupMemberCommandManager.getGroupByToggle(plugin.getProxy().getPlayer(uuid));
+                int id = groupMemberCommandManager.getGroupByToggle(uuid);
                 for (Member member : plugin.getGroups().get(id).getMember()) {
                     ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(member.getUuid());
 
