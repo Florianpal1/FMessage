@@ -1,8 +1,5 @@
 package fr.florianpal.fmessage.utils;
 
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
 public class StringUtils {
 
     public static boolean isNullOrEmpty(String text) {
