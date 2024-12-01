@@ -3,12 +3,12 @@ package fr.florianpal.fmessage.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.NickNameCommandManager;
 import fr.florianpal.fmessage.utils.StringUtils;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("nick|nickname")
 public class NickCommand extends BaseCommand {
@@ -28,7 +28,7 @@ public class NickCommand extends BaseCommand {
     @CommandPermission("fmessage.nick")
     @Description("{@@fmessage.nick_help_description}")
     @Syntax("(nickname)")
-    public void onNick(Player playerSender, @Optional String nickname) {
+    public void onNick(ProxiedPlayer playerSender, @Optional String nickname) {
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
         if (StringUtils.isNullOrEmpty(nickname)) {

@@ -20,13 +20,11 @@ package fr.florianpal.fmessage.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.MessageManager;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
-
-import java.util.Optional;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("m|msg")
 public class MSGCommand extends BaseCommand {
@@ -45,17 +43,17 @@ public class MSGCommand extends BaseCommand {
     @Description("{@@fmessage.msg_help_description}")
     @CommandCompletion("@players")
     @Syntax("[groupName] [message]")
-    public void onMSG(Player playerSender, String playerTargetName, String message) {
+    public void onMSG(ProxiedPlayer playerSender, String playerTargetName, String message) {
 
-        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+        ProxiedPlayer playerTargetOptional = plugin.getProxy().getPlayer(playerTargetName);
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
-        if (playerTargetOptional.isEmpty()) {
+        if (playerTargetOptional == null) {
 
             issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
             return;
         }
-        Player playerTarget = playerTargetOptional.get();
+        ProxiedPlayer playerTarget = playerTargetOptional;
 
         messageManager.sendMessage(playerSender, playerTarget, message);
     }

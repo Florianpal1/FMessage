@@ -16,11 +16,11 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
+import co.aikar.commands.BungeeCommandCompletionContext;
 import co.aikar.commands.CommandCompletions;
-import co.aikar.commands.VelocityCommandCompletionContext;
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.stream.Collectors;
 
@@ -33,13 +33,13 @@ public class CommandCompletionsManager {
     }
 
     private void registerCommandCompletions() {
-        CommandCompletions<VelocityCommandCompletionContext> commandCompletions = plugin.getCommandManager().getCommandCompletions();
+        CommandCompletions<BungeeCommandCompletionContext> commandCompletions = plugin.getCommandManager().getCommandCompletions();
         commandCompletions.registerAsyncCompletion("bungeeplayers", c -> {
-            CommandSource sender = c.getSender();
-            if (sender instanceof Player) {
-                return plugin.getServer().getAllPlayers()
+            CommandSender sender = c.getSender();
+            if (sender instanceof ProxiedPlayer) {
+                return plugin.getProxy().getPlayers()
                         .stream()
-                        .map(Player::getUsername)
+                        .map(ProxiedPlayer::getName)
                         .collect(Collectors.toList());
             }
             return null;

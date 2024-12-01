@@ -16,9 +16,9 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.queries.NickNameQueries;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,11 +35,11 @@ public class NickNameCommandManager {
         this.nicknames = getAllNickName();
     }
 
-    public String getNickName(Player playerSender) {
+    public String getNickName(ProxiedPlayer playerSender) {
         return nickNameQueries.getNickName(playerSender.getUniqueId());
     }
 
-    public String getCachedNickName(Player playerSender) {
+    public String getCachedNickName(ProxiedPlayer playerSender) {
         return nicknames.get(playerSender.getUniqueId());
     }
 
@@ -54,18 +54,18 @@ public class NickNameCommandManager {
         return nickNameQueries.getAllNickName();
     }
 
-    public void addNickName(Player playerSender, String name)  {
+    public void addNickName(ProxiedPlayer playerSender, String name)  {
         nickNameQueries.addNickName(playerSender.getUniqueId(), name);
         nicknames.put(playerSender.getUniqueId(), name);
     }
 
-    public void updateNickName(Player playerSender, String name)  {
+    public void updateNickName(ProxiedPlayer playerSender, String name)  {
         nickNameQueries.updateNickName(playerSender.getUniqueId(), name);
         nicknames.put(playerSender.getUniqueId(), name);
     }
 
 
-    public void removeNickName(Player playerSender) {
+    public void removeNickName(ProxiedPlayer playerSender) {
         nickNameQueries.removeNickName(playerSender.getUniqueId());
         nicknames.remove(playerSender.getUniqueId());
     }

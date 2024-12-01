@@ -16,10 +16,10 @@
 
 package fr.florianpal.fmessage.queries;
 
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,7 +41,7 @@ public class IgnoreQueries implements IDatabaseTable {
         this.databaseManager = plugin.getDatabaseManager();
     }
 
-    public void addIgnore(Player playerSender, Player playerTarget) {
+    public void addIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_IGNORE);
@@ -61,7 +61,7 @@ public class IgnoreQueries implements IDatabaseTable {
         }
     }
 
-    public void removeIgnore(Player playerSender, Player playerTarget) {
+    public void removeIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(REMOVE_IGNORE);
@@ -152,7 +152,7 @@ public class IgnoreQueries implements IDatabaseTable {
         return ignores;
     }
 
-    public boolean ignoreExist(Player playerSender, Player playerTarget) {
+    public boolean ignoreExist(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
         PreparedStatement statement = null;
         ResultSet result = null;
         boolean retour = false;

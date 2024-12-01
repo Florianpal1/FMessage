@@ -20,7 +20,6 @@ package fr.florianpal.fmessage.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
@@ -28,8 +27,7 @@ import fr.florianpal.fmessage.managers.commandManagers.GroupCommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.GroupMemberCommandManager;
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.objects.Member;
-
-import java.util.Optional;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("group")
 public class GroupCommand extends BaseCommand {
@@ -50,7 +48,7 @@ public class GroupCommand extends BaseCommand {
     @CommandPermission("fmessage.group.create")
     @Description("{@@fmessage.group_create_help_description}")
     @Syntax("[groupName]")
-    public void onCreate(Player playerSender, String groupName) {
+    public void onCreate(ProxiedPlayer playerSender, String groupName) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
         if (groupCommandManager.groupExist(playerSender, groupName)) {
@@ -71,7 +69,7 @@ public class GroupCommand extends BaseCommand {
     @CommandPermission("fmessage.group.remove")
     @Description("{@@fmessage.group_create_help_description}")
     @Syntax("[groupName]")
-    public void onRemove(Player playerSender, String groupName) {
+    public void onRemove(ProxiedPlayer playerSender, String groupName) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
         if (groupCommandManager.groupExist(playerSender, groupName)) {
@@ -93,17 +91,17 @@ public class GroupCommand extends BaseCommand {
     @CommandPermission("fmessage.group.member.add")
     @Description("{@@fmessage.group_member_create_help_description}")
     @Syntax("[groupName] [playerTargetName]")
-    public void onAddMember(Player playerSender, String groupName, String playerTargetName) {
-        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+    public void onAddMember(ProxiedPlayer playerSender, String groupName, String playerTargetName) {
+        ProxiedPlayer playerTargetOptional = plugin.getProxy().getPlayer(playerTargetName);
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
-        if (playerTargetOptional.isEmpty()) {
+        if (playerTargetOptional == null) {
 
             issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
             return;
         }
 
-        Player playerTarget = playerTargetOptional.get();
+        ProxiedPlayer playerTarget = playerTargetOptional;
         if (groupCommandManager.groupExist(playerSender, groupName)) {
 
             int groupId = groupCommandManager.getGroupId(playerSender, groupName);
@@ -127,18 +125,18 @@ public class GroupCommand extends BaseCommand {
     @CommandPermission("fmessage.group.member.kick")
     @Description("{@@fmessage.group_member_kickv_help_description}")
     @Syntax("[groupName] [playerTargetName]")
-    public void onRemoveMember(Player playerSender, String groupName, String playerTargetName) {
+    public void onRemoveMember(ProxiedPlayer playerSender, String groupName, String playerTargetName) {
 
-        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+        ProxiedPlayer playerTargetOptional = plugin.getProxy().getPlayer(playerTargetName);
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
-        if (playerTargetOptional.isEmpty()) {
+        if (playerTargetOptional == null) {
 
             issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
             return;
         }
 
-        Player playerTarget = playerTargetOptional.get();
+        ProxiedPlayer playerTarget = playerTargetOptional;
 
 
         if (groupCommandManager.groupExist(playerSender, groupName)) {
@@ -164,7 +162,7 @@ public class GroupCommand extends BaseCommand {
     @CommandPermission("fmessage.group.msg")
     @Description("{@@fmessage.group_msg_help_description}")
     @Syntax("[groupName] [message]")
-    public void onMSG(Player playerSender, String groupName, String message) {
+    public void onMSG(ProxiedPlayer playerSender, String groupName, String message) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
@@ -173,16 +171,16 @@ public class GroupCommand extends BaseCommand {
             if (groupMemberCommandManager.inGroup(groupId, playerSender)) {
                 Group group = plugin.getGroups().get(groupId);
                 for (Member member : group.getMember()) {
-                    Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(member.getUuid());
+                    ProxiedPlayer playerTargetOptional = plugin.getProxy().getPlayer(member.getUuid());
 
-                    if (playerTargetOptional.isEmpty()) {
+                    if (playerTargetOptional == null) {
                         return;
                     }
 
-                    Player playerTarget = playerTargetOptional.get();
+                    ProxiedPlayer playerTarget = playerTargetOptional;
 
                     CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerTarget);
-                    issuerTarget.sendInfo(MessageKeys.GROUP_MSG, "{group}", group.getName(), "{player}", playerSender.getUsername(), "{message}", message);
+                    issuerTarget.sendInfo(MessageKeys.GROUP_MSG, "{group}", group.getName(), "{player}", playerSender.getName(), "{message}", message);
                 }
                 return;
             }
@@ -198,7 +196,7 @@ public class GroupCommand extends BaseCommand {
     @CommandPermission("fmessage.group.toggle")
     @Description("{@@fmessage.group_toggle_help_description}")
     @Syntax("[groupName]")
-    public void onToggle(Player playerSender, String groupName) {
+    public void onToggle(ProxiedPlayer playerSender, String groupName) {
 
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 

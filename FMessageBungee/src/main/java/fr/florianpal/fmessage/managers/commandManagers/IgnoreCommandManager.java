@@ -16,9 +16,9 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.queries.IgnoreQueries;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -40,16 +40,16 @@ public class IgnoreCommandManager {
         return ignoreQueries.getAreIgnores(uuid);
     }
 
-    public void addIgnore(Player playerSender, Player playerTarget)  {
+    public void addIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget)  {
         ignoreQueries.addIgnore(playerSender, playerTarget);
     }
 
 
-    public void removeIgnore(Player playerSender, Player playerTarget) {
+    public void removeIgnore(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
         ignoreQueries.removeIgnore(playerSender, playerTarget);
     }
 
-    public boolean ignoreExist(Player playerSender, Player playerTarget) {
+    public boolean ignoreExist(ProxiedPlayer playerSender, ProxiedPlayer playerTarget) {
         return ignoreQueries.ignoreExist(playerSender, playerTarget);
     }
 }

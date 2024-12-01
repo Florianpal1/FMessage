@@ -16,12 +16,12 @@
 
 package fr.florianpal.fmessage.queries;
 
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
 import fr.florianpal.fmessage.objects.Group;
 import fr.florianpal.fmessage.objects.Member;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -52,7 +52,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         this.databaseManager = plugin.getDatabaseManager();
     }
 
-    public void addGroupeMember(int idGroup, Player player) {
+    public void addGroupeMember(int idGroup, ProxiedPlayer player) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_GROUP_MEMBER);
@@ -92,7 +92,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public void removeGroupeMember(int idGroup, Player player) {
+    public void removeGroupeMember(int idGroup, ProxiedPlayer player) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(REMOVE_GROUP_MEMBER);
@@ -150,7 +150,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public boolean inGroupMembers(int idGroup, Player proxiedPlayer) {
+    public boolean inGroupMembers(int idGroup, ProxiedPlayer proxiedPlayer) {
 
         boolean retour = false;
         PreparedStatement statement = null;
@@ -182,7 +182,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         return retour;
     }
 
-    public void setGroupeMemberToggle(int idGroup, Player player, int toggle) {
+    public void setGroupeMemberToggle(int idGroup, ProxiedPlayer player, int toggle) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(UPDATE_GROUP_MEMBER_TOGGLE);
@@ -204,7 +204,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         }
     }
 
-    public boolean getGroupeMemberToggle(int idGroup, Player proxiedPlayer) {
+    public boolean getGroupeMemberToggle(int idGroup, ProxiedPlayer proxiedPlayer) {
 
         boolean retour = false;
         PreparedStatement statement = null;
@@ -274,7 +274,7 @@ public class GroupeMemberQueries implements IDatabaseTable {
         return retour;
     }
 
-    public int getGroupByToggle(Player proxiedPlayer) {
+    public int getGroupByToggle(ProxiedPlayer proxiedPlayer) {
 
         int id = -1;
         PreparedStatement statement = null;

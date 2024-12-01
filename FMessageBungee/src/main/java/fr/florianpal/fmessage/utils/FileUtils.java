@@ -27,7 +27,7 @@ public class FileUtils {
             if (copy == null) throw new FileNotFoundException();
             input = file.getInputStream(copy);
         } catch (IOException e) {
-            plugin.getLogger().error("Unable to read default configuration: " + defaultName);
+            plugin.getLogger().severe("Unable to read default configuration: " + defaultName);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

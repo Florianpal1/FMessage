@@ -17,13 +17,10 @@
 package fr.florianpal.fmessage.managers;
 
 import co.aikar.commands.CommandIssuer;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.PluginMessageEvent;
-import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.server.RegisteredServer;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
@@ -31,15 +28,19 @@ import fr.florianpal.fmessage.managers.commandManagers.GroupMemberCommandManager
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.NickNameCommandManager;
 import fr.florianpal.fmessage.objects.Member;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PluginMessageEvent;
+import net.md_5.bungee.api.plugin.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 import static fr.florianpal.fmessage.FMessage.BUNGEE_CHAT;
 
-public class MessageListener {
+public class MessageListener implements Listener {
 
     private final FMessage plugin;
     private final GroupMemberCommandManager groupMemberCommandManager;
@@ -60,7 +61,7 @@ public class MessageListener {
     @Subscribe
     public void onMessage(PluginMessageEvent event) {
 
-        if (event.getIdentifier().equals(BUNGEE_CHAT)) {
+        if (event.getTag().equalsIgnoreCase(BUNGEE_CHAT)) {
 
             ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
 
@@ -72,17 +73,17 @@ public class MessageListener {
             String message = in.readUTF();
 
             if (groupMemberCommandManager.alreadyToggle(uuid)) {
-                int id = groupMemberCommandManager.getGroupByToggle(plugin.getServer().getPlayer(uuid).get());
+                int id = groupMemberCommandManager.getGroupByToggle(plugin.getProxy().getPlayer(uuid));
                 for (Member member : plugin.getGroups().get(id).getMember()) {
-                    Optional<Player> playerTarget = plugin.getServer().getPlayer(member.getUuid());
-                    if (playerTarget.isPresent()) {
+                    ProxiedPlayer playerTarget = plugin.getProxy().getPlayer(member.getUuid());
+
                         CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerTarget);
-                        issuerTarget.sendInfo(MessageKeys.GROUP_MSG, "{group}", plugin.getGroups().get(id).getName(), "{player}", playerTarget.get().getUsername(), "{message}", message);
-                        plugin.getLogger().info("[{" + plugin.getGroups().get(id).getName() + "}] " + playerTarget.get().getUsername() + " : " + message);
-                    }
+                        issuerTarget.sendInfo(MessageKeys.GROUP_MSG, "{group}", plugin.getGroups().get(id).getName(), "{player}", playerTarget.getName(), "{message}", message);
+                        plugin.getLogger().info("[{" + plugin.getGroups().get(id).getName() + "}] " + playerTarget.getName() + " : " + message);
+
                 }
             } else if (subchannel.equals(STAFF_CHAT)) {
-                for (RegisteredServer entry : plugin.getServer().getAllServers()) {
+                for (Map.Entry<String, ServerInfo> entry : plugin.getProxy().getServers().entrySet()) {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF(STAFF_CHAT);
                     out.writeUTF(uuid.toString());
@@ -90,13 +91,13 @@ public class MessageListener {
                     out.writeUTF(nickName == null ? "" : nickName);
                     out.writeUTF(formatWithPlaceholder);
                     out.writeUTF(message);
-                    entry.sendPluginMessage(FMessage.BUKKIT_CHAT, out.toByteArray());
+                    entry.getValue().sendData(FMessage.BUKKIT_CHAT, out.toByteArray());
                 }
             } else {
 
                 boolean colors = in.readBoolean();
                 boolean nickColors = in.readBoolean();
-                for (RegisteredServer entry : plugin.getServer().getAllServers()) {
+                for (Map.Entry<String, ServerInfo> entry : plugin.getProxy().getServers().entrySet()) {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF(subchannel);
                     out.writeUTF(uuid.toString());
@@ -113,7 +114,7 @@ public class MessageListener {
                     out.writeUTF(uuids);
                     out.writeBoolean(colors);
                     out.writeBoolean(nickColors);
-                    entry.sendPluginMessage(FMessage.BUKKIT_CHAT, out.toByteArray());
+                    entry.getValue().sendData(FMessage.BUKKIT_CHAT, out.toByteArray());
                 }
             }
         }

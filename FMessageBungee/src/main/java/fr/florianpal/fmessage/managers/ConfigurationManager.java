@@ -38,7 +38,7 @@ public class ConfigurationManager {
     public ConfigurationManager(FMessage core) {
 
         try {
-            YamlDocument databaseConfig = YamlDocument.create(new File(core.getDataDirectory().toFile(), "database.yml"),
+            YamlDocument databaseConfig = YamlDocument.create(new File(core.getDataFolder(), "database.yml"),
                     Objects.requireNonNull(getClass().getResourceAsStream("/database.yml")),
                     GeneralSettings.DEFAULT,
                     LoaderSettings.builder().setAutoUpdate(true).build(),
@@ -46,7 +46,7 @@ public class ConfigurationManager {
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).setOptionSorting(UpdaterSettings.DEFAULT_OPTION_SORTING).build()
             );
 
-            YamlDocument chatConfig = YamlDocument.create(new File(core.getDataDirectory().toFile(), "config.yml"),
+            YamlDocument chatConfig = YamlDocument.create(new File(core.getDataFolder(), "config.yml"),
                     Objects.requireNonNull(getClass().getResourceAsStream("/config.yml")),
                     GeneralSettings.DEFAULT,
                     LoaderSettings.builder().setAutoUpdate(true).build(),

@@ -20,11 +20,11 @@ package fr.florianpal.fmessage.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.MessageManager;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("r")
 public class RCommand extends BaseCommand {
@@ -45,7 +45,7 @@ public class RCommand extends BaseCommand {
     @CommandPermission("fmessage.r")
     @Description("{@@fmessage.r_help_description}")
     @Syntax("[message]")
-    public void onR(Player playerSender, String message) {
+    public void onR(ProxiedPlayer playerSender, String message) {
 
         if (!plugin.havePreviousPlayer(playerSender)) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);
@@ -57,7 +57,7 @@ public class RCommand extends BaseCommand {
             return;
         }
 
-        Player playerTarget = plugin.getPreviousPlayer(playerSender);
+        ProxiedPlayer playerTarget = plugin.getPreviousPlayer(playerSender);
         messageManager.sendMessage(playerSender, playerTarget, message);
     }
 }

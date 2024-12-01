@@ -17,32 +17,31 @@
 
 package fr.florianpal.fmessage.managers.commandManagers;
 
+import co.aikar.commands.BungeeCommandManager;
 import co.aikar.commands.MessageType;
-import co.aikar.commands.VelocityCommandManager;
 import co.aikar.locales.MessageKey;
-import com.velocitypowered.api.proxy.ProxyServer;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import dev.dejvokep.boostedyaml.route.Route;
 import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import fr.florianpal.fmessage.FMessage;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.md_5.bungee.api.ChatColor;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
 
-public class CommandManager extends VelocityCommandManager {
-    public CommandManager(ProxyServer proxyServer, FMessage plugin) {
-        super(proxyServer, plugin);
+public class CommandManager extends BungeeCommandManager {
+    public CommandManager(FMessage plugin) {
+        super(plugin);
         this.enableUnstableAPI("help");
 
-        this.setFormat(MessageType.SYNTAX, NamedTextColor.YELLOW, NamedTextColor.GOLD);
-        this.setFormat(MessageType.INFO, NamedTextColor.YELLOW, NamedTextColor.GOLD);
-        this.setFormat(MessageType.HELP, NamedTextColor.YELLOW, NamedTextColor.GOLD, NamedTextColor.RED);
-        this.setFormat(MessageType.ERROR, NamedTextColor.RED, NamedTextColor.GOLD);
+        this.setFormat(MessageType.SYNTAX, ChatColor.YELLOW, ChatColor.GOLD);
+        this.setFormat(MessageType.INFO, ChatColor.YELLOW, ChatColor.GOLD);
+        this.setFormat(MessageType.HELP, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.RED);
+        this.setFormat(MessageType.ERROR, ChatColor.RED, ChatColor.GOLD);
         try {
             loadYamlLanguageFile(plugin, "lang_" + plugin.getConfigurationManager().getChat().getLang() + ".yml", Locale.FRENCH);
         } catch (IOException e) {
@@ -54,7 +53,7 @@ public class CommandManager extends VelocityCommandManager {
 
     public boolean loadYamlLanguageFile(FMessage plugin, String file, Locale locale) throws IOException {
 
-        YamlDocument yamlConfiguration = YamlDocument.create(new File(plugin.getDataDirectory().toFile(), file),
+        YamlDocument yamlConfiguration = YamlDocument.create(new File(plugin.getDataFolder(), file),
                 Objects.requireNonNull(getClass().getResourceAsStream("/"+file)),
                 GeneralSettings.DEFAULT,
                 DumperSettings.DEFAULT

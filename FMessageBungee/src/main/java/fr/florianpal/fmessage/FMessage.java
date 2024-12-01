@@ -16,14 +16,6 @@
 
 package fr.florianpal.fmessage;
 
-import com.google.inject.Inject;
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.plugin.Plugin;
-import com.velocitypowered.api.plugin.annotation.DataDirectory;
-import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import fr.florianpal.fmessage.commands.*;
 import fr.florianpal.fmessage.managers.ConfigurationManager;
 import fr.florianpal.fmessage.managers.DatabaseManager;
@@ -36,24 +28,16 @@ import fr.florianpal.fmessage.queries.GroupeQueries;
 import fr.florianpal.fmessage.queries.IgnoreQueries;
 import fr.florianpal.fmessage.queries.NickNameQueries;
 import fr.florianpal.fmessage.utils.FileUtils;
-import org.bstats.velocity.Metrics;
-import org.slf4j.Logger;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
+import org.bstats.bungeecord.Metrics;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = "fmessage", name = "FMessage", version = "1.0.0-SNAPSHOT",
-        url = "https://florianpal.fr", description = "FMessage", authors = {"Florianpal"})
-public class FMessage {
-
-    private final ProxyServer server;
-
-    private final org.slf4j.Logger logger;
-
-    private final Metrics.Factory metricsFactory;
-
-    private final Path dataDirectory;
+public class FMessage extends Plugin {
 
     private ConfigurationManager configurationManager;
     private DatabaseManager databaseManager;
@@ -79,31 +63,22 @@ public class FMessage {
 
     private final List<UUID> playerStaff = new ArrayList<>();
 
-    public static final MinecraftChannelIdentifier BUKKIT_CHAT = MinecraftChannelIdentifier.from("fmessage:chatbukkit");
+    public static final String BUKKIT_CHAT = "fmessage:chatbukkit";
 
-    public static final MinecraftChannelIdentifier BUNGEE_CHAT = MinecraftChannelIdentifier.from("fmessage:chatbungee");
+    public static final String BUNGEE_CHAT = "fmessage:chatbungee";
 
-
-    @Inject
-    public FMessage(ProxyServer proxyServer, org.slf4j.Logger logger, Metrics.Factory metricsFactory, @DataDirectory Path dataDirectory) {
-        this.server = proxyServer;
-        this.logger = logger;
-        this.metricsFactory = metricsFactory;
-        this.dataDirectory = dataDirectory;
-    }
-
-    @Subscribe
-    public void onEnable(ProxyInitializeEvent event) {
+    @Override
+    public void onEnable() {
         int pluginId = 24047;
-        Metrics metrics = metricsFactory.make(this, pluginId);
+        Metrics metrics = new Metrics(this, pluginId);
 
         configurationManager = new ConfigurationManager(this);
 
-        File languageFile = new File(dataDirectory.toFile(), "lang_" + configurationManager.getChat().getLang() + ".yml");
+        File languageFile = new File(getDataFolder(), "lang_" + configurationManager.getChat().getLang() + ".yml");
         FileUtils.createDefaultConfiguration(this, languageFile, "lang_" + configurationManager.getChat().getLang() + ".yml");
 
-        server.getChannelRegistrar().register(BUKKIT_CHAT);
-        server.getChannelRegistrar().register(BUNGEE_CHAT);
+        getProxy().registerChannel(BUKKIT_CHAT);
+        getProxy().registerChannel(BUNGEE_CHAT);
 
         databaseManager = new DatabaseManager(this);
 
@@ -124,10 +99,10 @@ public class FMessage {
         nickNameCommandManager = new NickNameCommandManager(this);
         messageManager = new MessageManager(this);
 
-        commandManager = new CommandManager(server, this);
+        commandManager = new CommandManager(this);
         commandManager.registerDependency(ConfigurationManager.class, configurationManager);
 
-        server.getEventManager().register(this, new MessageListener(this));
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new MessageListener(this));
 
         commandCompletionsManager = new CommandCompletionsManager(this);
 
@@ -149,32 +124,22 @@ public class FMessage {
         getLogger().info("FMessage enabled");
     }
 
-    public ConfigurationManager getConfigurationManager() {
-        return configurationManager;
-    }
-
-    public CommandManager getCommandManager() {
-        return commandManager;
-    }
-
-    public void setPreviousPlayer(Player sender, Player target) {
+    public void setPreviousPlayer(ProxiedPlayer sender, ProxiedPlayer target) {
         playerMessage.put(sender.getUniqueId(), target.getUniqueId());
     }
 
-    public boolean isPreviousPlayerOnline(Player proxiedPlayer) {
-        Optional<Player> proxiedPlayer1 = server.getPlayer(playerMessage.get(proxiedPlayer.getUniqueId()));
-        return proxiedPlayer1.isPresent();
+    public boolean isPreviousPlayerOnline(ProxiedPlayer proxiedPlayer) {
+        ProxiedPlayer proxiedPlayer1 = getProxy().getPlayer(playerMessage.get(proxiedPlayer.getUniqueId()));
+        return proxiedPlayer1 != null;
     }
 
-    public Player getPreviousPlayer(Player proxiedPlayer) {
-        return getServer().getPlayer(playerMessage.get(proxiedPlayer.getUniqueId())).get();
+    public ProxiedPlayer getPreviousPlayer(ProxiedPlayer proxiedPlayer) {
+        return getProxy().getPlayer(playerMessage.get(proxiedPlayer.getUniqueId()));
     }
 
-    public boolean havePreviousPlayer(Player proxiedPlayer) {
+    public boolean havePreviousPlayer(ProxiedPlayer proxiedPlayer) {
         return playerMessage.containsKey(proxiedPlayer.getUniqueId());
     }
-
-
 
     public List<UUID> getPlayerSpy() {
         return playerSpy;
@@ -246,18 +211,6 @@ public class FMessage {
         this.playerStaff.add(player);
     }
 
-    public ProxyServer getServer() {
-        return server;
-    }
-
-    public Logger getLogger() {
-        return logger;
-    }
-
-    public Path getDataDirectory() {
-        return dataDirectory;
-    }
-
     public NickNameQueries getNickNameQueries() {
         return nickNameQueries;
     }
@@ -268,5 +221,13 @@ public class FMessage {
 
     public MessageManager getMessageManager() {
         return messageManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    public ConfigurationManager getConfigurationManager() {
+        return configurationManager;
     }
 }

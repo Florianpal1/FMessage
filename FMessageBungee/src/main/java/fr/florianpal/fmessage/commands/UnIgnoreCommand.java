@@ -20,13 +20,12 @@ package fr.florianpal.fmessage.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @CommandAlias("unignore")
@@ -47,16 +46,16 @@ public class UnIgnoreCommand extends BaseCommand {
     @Description("{@@fmessage.unignore_help_description}")
     @CommandCompletion("@players")
     @Syntax("[playerTargetName]")
-    public void onUnIgnore(Player playerSender, String playerTargetName) {
-        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+    public void onUnIgnore(ProxiedPlayer playerSender, String playerTargetName) {
+        ProxiedPlayer playerTargetOptional = plugin.getProxy().getPlayer(playerTargetName);
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
-        if (playerTargetOptional.isEmpty()) {
+        if (playerTargetOptional == null) {
 
             issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
             return;
         }
-        Player playerTarget = playerTargetOptional.get();
+        ProxiedPlayer playerTarget = playerTargetOptional;
 
         if (ignoreCommandManager.ignoreExist(playerSender, playerTarget)) {
             CommandIssuer issuerTarget = commandManager.getCommandIssuer(playerSender);

@@ -1,7 +1,6 @@
 package fr.florianpal.fmessage.utils;
 
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class StringUtils {
@@ -14,20 +13,14 @@ public class StringUtils {
         return text.isEmpty();
     }
 
-    public static TextComponent format(String msg) {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(msg);
-    }
+    public static String replace(String textComponent, String stringToChange, String stringYouWant, boolean color) {
 
-    public static TextComponent replace(TextComponent textComponent, String stringToChange, String stringYouWant, boolean color) {
-
-        TextReplacementConfig.Builder textReplacementConfigBulder = TextReplacementConfig.builder()
-                .matchLiteral(stringToChange);
         if (color) {
-            textReplacementConfigBulder.replacement(format(stringYouWant));
+            textComponent = textComponent.replace(stringToChange, FormatUtil.format(stringYouWant));
         } else {
-            textReplacementConfigBulder.replacement(stringYouWant);
+            textComponent = textComponent.replace(stringToChange, stringYouWant);
         }
 
-        return (TextComponent) textComponent.replaceText(textReplacementConfigBulder.build());
+        return textComponent;
     }
 }

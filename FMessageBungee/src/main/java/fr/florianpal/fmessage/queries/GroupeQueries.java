@@ -16,11 +16,11 @@
 
 package fr.florianpal.fmessage.queries;
 
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.IDatabaseTable;
 import fr.florianpal.fmessage.managers.DatabaseManager;
 import fr.florianpal.fmessage.objects.Group;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,7 +45,7 @@ public class GroupeQueries implements IDatabaseTable {
         this.databaseManager = plugin.getDatabaseManager();
     }
 
-    public void addGroupe(Player playerSender, String name) {
+    public void addGroupe(ProxiedPlayer playerSender, String name) {
         PreparedStatement statement = null;
         try (Connection connection = databaseManager.getConnection()) {
             statement = connection.prepareStatement(ADD_GROUP);
@@ -117,7 +117,7 @@ public class GroupeQueries implements IDatabaseTable {
         return groups;
     }
 
-    public int getGroupId(Player playerSender, String name) {
+    public int getGroupId(ProxiedPlayer playerSender, String name) {
         PreparedStatement statement = null;
         ResultSet result = null;
         int id = -1;
@@ -178,7 +178,7 @@ public class GroupeQueries implements IDatabaseTable {
         return id;
     }
 
-    public boolean groupExist(Player playerSender, String name) {
+    public boolean groupExist(ProxiedPlayer playerSender, String name) {
         PreparedStatement statement = null;
         ResultSet result = null;
         boolean retour = false;

@@ -19,13 +19,11 @@ package fr.florianpal.fmessage.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
-import com.velocitypowered.api.proxy.Player;
 import fr.florianpal.fmessage.FMessage;
 import fr.florianpal.fmessage.languages.MessageKeys;
 import fr.florianpal.fmessage.managers.commandManagers.CommandManager;
 import fr.florianpal.fmessage.managers.commandManagers.IgnoreCommandManager;
-
-import java.util.Optional;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 @CommandAlias("ignore")
 public class IgnoreCommand extends BaseCommand {
@@ -45,16 +43,16 @@ public class IgnoreCommand extends BaseCommand {
     @Description("{@@fmessage.ignore_help_description}")
     @CommandCompletion("@players")
     @Syntax("[playerTargetName]")
-    public void onIgnore(Player playerSender, String playerTargetName) {
-        Optional<Player> playerTargetOptional = plugin.getServer().getPlayer(playerTargetName);
+    public void onIgnore(ProxiedPlayer playerSender, String playerTargetName) {
+        ProxiedPlayer playerTargetOptional = plugin.getProxy().getPlayer(playerTargetName);
         CommandIssuer issuerSender = commandManager.getCommandIssuer(playerSender);
 
-        if (playerTargetOptional.isEmpty()) {
+        if (playerTargetOptional == null) {
 
             issuerSender.sendInfo(MessageKeys.PLAYER_OFFLINE);
             return;
         }
-        Player playerTarget = playerTargetOptional.get();
+        ProxiedPlayer playerTarget = playerTargetOptional;
 
         if (playerTarget.hasPermission("fmessage.cannot_ignore")) {
 
