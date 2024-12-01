@@ -83,6 +83,7 @@ public class FMessage {
 
     public static final MinecraftChannelIdentifier BUNGEE_CHAT = MinecraftChannelIdentifier.from("fmessage:chatbungee");
 
+    Metrics metrics;
 
     @Inject
     public FMessage(ProxyServer proxyServer, org.slf4j.Logger logger, Metrics.Factory metricsFactory, @DataDirectory Path dataDirectory) {
@@ -95,7 +96,7 @@ public class FMessage {
     @Subscribe
     public void onEnable(ProxyInitializeEvent event) {
         int pluginId = 24047;
-        Metrics metrics = metricsFactory.make(this, pluginId);
+        metrics = metricsFactory.make(this, pluginId);
 
         configurationManager = new ConfigurationManager(dataDirectory.toFile());
 

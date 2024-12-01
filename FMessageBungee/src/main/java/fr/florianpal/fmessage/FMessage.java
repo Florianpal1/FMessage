@@ -66,10 +66,12 @@ public class FMessage extends Plugin {
 
     public static final String BUNGEE_CHAT = "fmessage:chatbungee";
 
+    Metrics metrics;
+
     @Override
     public void onEnable() {
         int pluginId = 24047;
-        Metrics metrics = new Metrics(this, pluginId);
+        metrics = new Metrics(this, pluginId);
 
         configurationManager = new ConfigurationManager(getDataFolder());
 
