@@ -6,7 +6,7 @@
 
     <groupId>fr.florianpal</groupId>
     <artifactId>FMessageBukkit</artifactId>
-    <version>2.4.3</version>
+    <version>${project.parent.version}</version>
     <build>
         <plugins>
             <plugin>

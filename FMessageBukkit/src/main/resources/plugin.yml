@@ -1,5 +1,5 @@
 name: FMessageBukkit
 main: fr.florianpal.fmessage.FMessage
 author: florianpal
-version: 2.4.3
+version: ${project.parent.version}
 api-version: 1.16

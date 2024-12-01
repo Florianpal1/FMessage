@@ -4,9 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>fr.florianpal</groupId>
+        <artifactId>FMessage</artifactId>
+        <version>${global.version}</version>
+    </parent>
+
     <groupId>fr.florianpal</groupId>
     <artifactId>FMessageBungee</artifactId>
-    <version>2.4.3</version>
+    <version>${project.parent.version}</version>
 
     <build>
         <plugins>
