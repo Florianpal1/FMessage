@@ -29,5 +29,7 @@ jobs:
         cache: maven
     - name: Build Bungee with Maven
       run: mvn -B package --file FMessageBungee/pom.xml
+    - name: Build Bungee with Maven
+      run: mvn -B package --file FMessageVelocity/pom.xml
     - name: Build Bukkit with Maven
       run: mvn -B package --file FMessageBukkit/pom.xml
