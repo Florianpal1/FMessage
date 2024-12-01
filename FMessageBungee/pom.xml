@@ -7,6 +7,7 @@
     <groupId>fr.florianpal</groupId>
     <artifactId>FMessageBungee</artifactId>
     <version>2.4.3</version>
+
     <build>
         <plugins>
             <plugin>
@@ -61,6 +62,7 @@
             </plugin>
         </plugins>
     </build>
+
     <repositories>
         <repository>
             <id>jitpack</id>
