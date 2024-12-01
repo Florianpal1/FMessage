@@ -1,0 +1,5 @@
+version: 1
+database:
+  url: "jdbc:mariadb://localhost:3306/test"
+  user: "root"
+  password: ""
