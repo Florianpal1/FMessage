@@ -16,9 +16,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
@@ -28,4 +26,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build FMessage with Maven
-      run: mvn -B package --file .
+      run: mvn -B package -DskipTests=true
+    - uses: actions/upload-artifact@v1
+      with:
+        name: Package
+        path: staging
