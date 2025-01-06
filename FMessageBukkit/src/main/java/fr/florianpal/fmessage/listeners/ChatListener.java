@@ -20,6 +20,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.florianpal.fmessage.FMessage;
+import fr.florianpal.fmessage.utils.FormatUtil;
 import fr.florianpal.fmessage.utils.StringUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
@@ -159,13 +160,16 @@ public class ChatListener implements Listener, PluginMessageListener {
                 String finalName = StringUtils.isNullOrEmpty(nickName) ? displayName : nickName;
 
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
+
+                    formatWithPlaceholder = StringUtils.replace(formatWithPlaceholder, "{displayName}", finalName, nickColors);
+                    formatWithPlaceholder = StringUtils.replace(formatWithPlaceholder, "{message}", messageRecieved, colors);
                     if (!ignores.contains(p.getUniqueId())) {
 
-                        formatWithPlaceholder = StringUtils.replace(formatWithPlaceholder, "{displayName}", finalName, nickColors);
-                        p.sendMessage(StringUtils.replace(formatWithPlaceholder, "{message}", messageRecieved, colors));
+                        p.sendMessage(formatWithPlaceholder);
                     } else {
                         p.sendMessage(StringUtils.format(plugin.getConfigurationManager().getChat().getIgnoreFormat()));
                     }
+                    plugin.getLogger().info(FormatUtil.format(formatWithPlaceholder));
                 }
             } else if (subchannel.equalsIgnoreCase("StaffMessage")) {
                 String playerUUID = in.readUTF();
