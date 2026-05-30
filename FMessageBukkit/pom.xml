@@ -7,11 +7,11 @@
     <parent>
         <groupId>fr.florianpal</groupId>
         <artifactId>FMessage</artifactId>
-        <version>${global.version}</version>
+        <version>2.4.5</version>
     </parent>
 
     <artifactId>FMessageBukkit</artifactId>
-    <version>${project.parent.version}</version>
+    <version>2.4.5</version>
     <build>
         <plugins>
             <plugin>
@@ -93,7 +93,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.21.7-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

@@ -1,4 +1,4 @@
 name: FMessageBungee
 main: fr.florianpal.fmessage.FMessage
-version: ${project.parent.version}
+version: 2.4.5
 author: Florianpal

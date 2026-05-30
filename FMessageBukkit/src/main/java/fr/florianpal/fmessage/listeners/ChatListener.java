@@ -159,18 +159,17 @@ public class ChatListener implements Listener, PluginMessageListener {
 
                 String finalName = StringUtils.isNullOrEmpty(nickName) ? displayName : nickName;
 
+
+                formatWithPlaceholder = StringUtils.replace(formatWithPlaceholder, "{displayName}", finalName, nickColors);
+                formatWithPlaceholder = StringUtils.replace(formatWithPlaceholder, "{message}", messageRecieved, colors);
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
-
-                    formatWithPlaceholder = StringUtils.replace(formatWithPlaceholder, "{displayName}", finalName, nickColors);
-                    formatWithPlaceholder = StringUtils.replace(formatWithPlaceholder, "{message}", messageRecieved, colors);
                     if (!ignores.contains(p.getUniqueId())) {
-
                         p.sendMessage(formatWithPlaceholder);
                     } else {
                         p.sendMessage(StringUtils.format(plugin.getConfigurationManager().getChat().getIgnoreFormat()));
                     }
-                    plugin.getLogger().info(FormatUtil.format(formatWithPlaceholder));
                 }
+                plugin.getLogger().info(FormatUtil.format(formatWithPlaceholder));
             } else if (subchannel.equalsIgnoreCase("StaffMessage")) {
                 String playerUUID = in.readUTF();
                 String displayName = in.readUTF();
