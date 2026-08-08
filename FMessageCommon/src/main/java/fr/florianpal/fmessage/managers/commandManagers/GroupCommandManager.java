@@ -45,6 +45,10 @@ public class GroupCommandManager {
         return groupeQueries.getGroupId(name);
     }
 
+    public int getMemberGroupId(String name, UUID member)  {
+        return groupeQueries.getMemberGroupId(name, member);
+    }
+
 
     public void removeGroup(int id_group) {
         groupeQueries.removeGroup(id_group);

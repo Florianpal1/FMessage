@@ -23,12 +23,17 @@ import fr.florianpal.fmessage.FMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
 public class CommandManager extends PaperCommandManager {
+
+    private final FMessage plugin;
+
     public CommandManager(FMessage plugin) {
         super(plugin);
+        this.plugin = plugin;
         this.enableUnstableAPI("help");
 
         this.setFormat(MessageType.SYNTAX, ChatColor.YELLOW, ChatColor.GOLD);
@@ -43,5 +48,20 @@ public class CommandManager extends PaperCommandManager {
         }
 
         this.getLocales().setDefaultLocale(Locale.FRENCH);
+    }
+
+    /**
+     * Re-reads the language file selected by the {@code lang} option. Used by /fmessage reload.
+     */
+    public void reloadLang() {
+        String fileName = "lang_" + plugin.getConfigurationManager().getChat().getLang() + ".yml";
+        // The lang option may have been changed by the same reload: extract the file if it is new.
+        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), fileName), fileName);
+        try {
+            this.getLocales().loadYamlLanguageFile(fileName, Locale.FRENCH);
+        } catch (IOException | InvalidConfigurationException e) {
+            plugin.getLogger().severe("Failed to reload the language file");
+            e.printStackTrace();
+        }
     }
 }

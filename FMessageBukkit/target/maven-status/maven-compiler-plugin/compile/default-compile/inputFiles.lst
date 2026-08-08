@@ -1,0 +1,10 @@
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/FMessage.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/commands/ReloadCommand.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/commands/StaffCommand.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/configurations/ChatConfig.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/languages/MessageKeys.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/listeners/ChatListener.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/managers/CommandManager.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/managers/ConfigurationManager.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/utils/FormatUtil.java
+/home/florian/Projet/FMessage/FMessageBukkit/src/main/java/fr/florianpal/fmessage/utils/StringUtils.java

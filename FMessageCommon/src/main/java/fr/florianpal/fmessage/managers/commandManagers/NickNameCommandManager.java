@@ -48,6 +48,10 @@ public class NickNameCommandManager {
         return nickNameQueries.getAllNickName();
     }
 
+    public void reloadNickNames() {
+        this.nicknames = getAllNickName();
+    }
+
     public void addNickName(UUID playerSender, String name)  {
         nickNameQueries.addNickName(playerSender, name);
         nicknames.put(playerSender, name);

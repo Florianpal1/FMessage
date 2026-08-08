@@ -25,11 +25,25 @@ public class ChatConfig {
     private String senderChatFormat;
     private String spyChatFormat;
 
+    private boolean notificationSoundEnabled;
+    private String notificationSound;
+
     public void load(YamlDocument config) {
         lang = config.getString("lang");
         targetChatFormat = config.getString("format.targetChatFormat");
         senderChatFormat = config.getString("format.senderChatFormat");
         spyChatFormat = config.getString("format.spyChatFormat");
+
+        notificationSoundEnabled = config.getBoolean("notification.enabled", true);
+        notificationSound = config.getString("notification.sound", "entity.experience_orb.pickup");
+    }
+
+    public boolean isNotificationSoundEnabled() {
+        return notificationSoundEnabled;
+    }
+
+    public String getNotificationSound() {
+        return notificationSound;
     }
 
     public String getTargetChatFormat() {

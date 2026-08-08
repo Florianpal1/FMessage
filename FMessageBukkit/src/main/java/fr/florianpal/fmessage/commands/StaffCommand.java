@@ -37,7 +37,7 @@ public class StaffCommand extends BaseCommand {
 
     @Default
     @CommandPermission("fmessage.staffchat")
-    @Description("{@@fmessage.staffchat_help_description}")
+    @Description("{@@acf-fmessage.staffchat_help_description}")
     @Syntax("[message]")
     public void onStaffChat(Player playerSender, String message) {
 

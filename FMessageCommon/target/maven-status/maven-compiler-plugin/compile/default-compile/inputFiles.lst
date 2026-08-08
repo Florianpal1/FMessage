@@ -1,0 +1,17 @@
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/IDatabaseTable.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/configurations/ChatConfig.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/configurations/DatabaseConfig.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/managers/ConfigurationManager.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/managers/DatabaseManager.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/managers/commandManagers/GroupCommandManager.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/managers/commandManagers/GroupMemberCommandManager.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/managers/commandManagers/IgnoreCommandManager.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/managers/commandManagers/NickNameCommandManager.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/managers/commandManagers/PlayerCommandManager.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/objects/Group.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/objects/Member.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/queries/GroupeMemberQueries.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/queries/GroupeQueries.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/queries/IgnoreQueries.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/queries/NickNameQueries.java
+/home/florian/Projet/FMessage/FMessageCommon/src/main/java/fr/florianpal/fmessage/queries/PlayerQueries.java

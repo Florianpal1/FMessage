@@ -33,6 +33,7 @@ public class GroupeQueries implements IDatabaseTable {
     private static final String GET_GROUPS = "SELECT * FROM fm_groups";
     private static final String GET_GROUP = "SELECT * FROM fm_groups where playerOwnerUuid=? and name=?";
     private static final String GET_GROUP_BY_NAME = "SELECT * FROM fm_groups where name=?";
+    private static final String GET_GROUP_BY_NAME_AND_MEMBER = "SELECT g.* FROM fm_groups g INNER JOIN fm_groupMembers m ON m.id_group=g.id WHERE g.name=? and m.playerMemberUuid=?";
 
     private static final String ADD_GROUP = "INSERT INTO fm_groups (playerOwnerUuid, name) VALUES(?,?)";
     private static final String REMOVE_GROUP = "DELETE FROM fm_groups WHERE id=?";
@@ -113,6 +114,41 @@ public class GroupeQueries implements IDatabaseTable {
         }
 
         return groups;
+    }
+
+    /**
+     * Id of the group named {@code name} the player is a member of, or -1 when there is none.
+     * Resolving by membership avoids picking someone else's group when two groups share a name.
+     */
+    public int getMemberGroupId(String name, UUID member) {
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        int id = -1;
+        try (Connection connection = databaseManager.getConnection()) {
+            statement = connection.prepareStatement(GET_GROUP_BY_NAME_AND_MEMBER);
+            statement.setString(1, name);
+            statement.setString(2, member.toString());
+            result = statement.executeQuery();
+
+            if (result.next()) {
+                id = result.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return id;
     }
 
     public int getGroupId(UUID playerSender, String name) {
@@ -243,7 +279,8 @@ public class GroupeQueries implements IDatabaseTable {
                 "`id` INTEGER AUTO_INCREMENT," +
                 "`playerOwnerUuid` VARCHAR(36) NOT NULL, " +
                         "`name` VARCHAR(36) NOT NULL, " +
-                        "PRIMARY KEY (`id`)",
+                        "PRIMARY KEY (`id`), " +
+                        "UNIQUE KEY `uk_fm_groups_owner_name` (`playerOwnerUuid`, `name`)",
                 "DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"};
     }
 }

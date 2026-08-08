@@ -28,6 +28,13 @@ public class ChatConfig {
     private String spamFormat;
     private String staffChatFormat;
 
+    private boolean floodEnabled;
+    private int floodCharRepeat;
+
+    private boolean spamEnabled;
+    private int spamMinLength;
+    private double spamRatio;
+
     public void load(Configuration config) {
 
         lang = config.getString("lang");
@@ -38,6 +45,34 @@ public class ChatConfig {
         ignoreFormat = config.getString("ignoreFormat");
         floodFormat = config.getString("floodFormat");
         spamFormat = config.getString("spamFormat");
+
+        // Defaults match the behaviour that used to be hard-coded in ChatListener.
+        floodEnabled = config.getBoolean("antiFlood.enabled", true);
+        floodCharRepeat = config.getInt("antiFlood.charRepeat", 7);
+
+        spamEnabled = config.getBoolean("antiCaps.enabled", true);
+        spamMinLength = config.getInt("antiCaps.minLength", 3);
+        spamRatio = config.getDouble("antiCaps.ratio", 1.0);
+    }
+
+    public boolean isFloodEnabled() {
+        return floodEnabled;
+    }
+
+    public int getFloodCharRepeat() {
+        return floodCharRepeat;
+    }
+
+    public boolean isSpamEnabled() {
+        return spamEnabled;
+    }
+
+    public int getSpamMinLength() {
+        return spamMinLength;
+    }
+
+    public double getSpamRatio() {
+        return spamRatio;
     }
 
     public String getChatFormat() {

@@ -15,6 +15,7 @@
 
 package fr.florianpal.fmessage;
 
+import fr.florianpal.fmessage.commands.ReloadCommand;
 import fr.florianpal.fmessage.commands.StaffCommand;
 import fr.florianpal.fmessage.listeners.ChatListener;
 import fr.florianpal.fmessage.managers.CommandManager;
@@ -33,11 +34,17 @@ public class FMessage extends JavaPlugin {
     private ChatListener chatListener;
     private ConfigurationManager configurationManager;
     private CommandManager commandManager;
+    private boolean placeholderApi;
 
     @Override
     public void onEnable() {
 
         configurationManager = new ConfigurationManager(this);
+
+        placeholderApi = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
+        if (!placeholderApi) {
+            getLogger().info("PlaceholderAPI not found: placeholders will be left as-is in chat formats.");
+        }
 
         File languageFile = new File(getDataFolder(), "lang_" + configurationManager.getChat().getLang() + ".yml");
         createDefaultConfiguration(languageFile, "lang_" + configurationManager.getChat().getLang() + ".yml");
@@ -47,6 +54,7 @@ public class FMessage extends JavaPlugin {
 
         commandManager = new CommandManager(this);
         commandManager.registerCommand(new StaffCommand(this));
+        commandManager.registerCommand(new ReloadCommand(this));
 
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "fmessage:chatbungee");
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "fmessage:chatbukkit", chatListener);
@@ -112,6 +120,9 @@ public class FMessage extends JavaPlugin {
     }
 
     public String setPlaceHolders(OfflinePlayer player, String message) {
+        if (!placeholderApi) {
+            return message;
+        }
         return PlaceholderAPI.setPlaceholders(player, message);
     }
 

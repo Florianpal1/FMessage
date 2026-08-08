@@ -48,6 +48,26 @@ public class DatabaseManager {
         repositories.add(repository);
     }
 
+    /**
+     * @return a human-readable diagnosis for a failed connection, so admins are not left with a raw stack trace.
+     */
+    private String describeConnectionFailure(SQLException e) {
+        String url = configurationManager.getDatabase().getUrl();
+        StringBuilder hint = new StringBuilder("FMessage could not reach the database (" + e.getMessage() + ").");
+
+        if (url == null || url.isEmpty()) {
+            hint.append(" database.url is empty in database.yml.");
+        } else if (!url.startsWith("jdbc:mariadb:")) {
+            hint.append(" database.url is '").append(url)
+                    .append("': FMessage ships the MariaDB driver, so the URL must start with 'jdbc:mariadb://'")
+                    .append(" even when connecting to a MySQL server.");
+        } else {
+            hint.append(" Check that the server is reachable, that the database exists,")
+                    .append(" and that the user may connect from this host.");
+        }
+        return hint.toString();
+    }
+
     public void initializeTables() {
         try (Connection connection = getConnection()) {
             for (IDatabaseTable repository : repositories) {
@@ -63,14 +83,16 @@ public class DatabaseManager {
                 }
             }
         } catch (SQLException e) {
+            System.err.println(describeConnectionFailure(e));
             e.printStackTrace();
         }
     }
 
     private boolean tableExists(String tableName) throws SQLException {
-        Connection connection = getConnection();
-        DatabaseMetaData dbm = connection.getMetaData();
-        ResultSet tables = dbm.getTables(null, null, tableName, null);
-        return tables.next();
+        try (Connection connection = getConnection()) {
+            DatabaseMetaData dbm = connection.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, tableName, null);
+            return tables.next();
+        }
     }
 }

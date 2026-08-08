@@ -29,15 +29,21 @@ public class ConfigurationManager {
 
     private final ChatConfig chat = new ChatConfig();
     private final File chatFile;
-    private final FileConfiguration chatConfig;
 
     public ConfigurationManager(FMessage core) {
         this.core = core;
 
         chatFile = new File(this.core.getDataFolder(), "config.yml");
         core.createDefaultConfiguration(chatFile, "config.yml");
-        chatConfig = YamlConfiguration.loadConfiguration(chatFile);
 
+        reload();
+    }
+
+    /**
+     * Re-reads config.yml from disk. Used by /fmessage reload.
+     */
+    public void reload() {
+        FileConfiguration chatConfig = YamlConfiguration.loadConfiguration(chatFile);
         chat.load(chatConfig);
     }
 

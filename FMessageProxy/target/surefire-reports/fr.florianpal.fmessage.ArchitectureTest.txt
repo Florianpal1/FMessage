@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: fr.florianpal.fmessage.ArchitectureTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.756 s -- in fr.florianpal.fmessage.ArchitectureTest

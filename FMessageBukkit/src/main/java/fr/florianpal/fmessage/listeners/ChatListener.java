@@ -20,6 +20,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.florianpal.fmessage.FMessage;
+import fr.florianpal.fmessage.configurations.ChatConfig;
 import fr.florianpal.fmessage.utils.FormatUtil;
 import fr.florianpal.fmessage.utils.StringUtils;
 import net.kyori.adventure.text.TextComponent;
@@ -52,20 +53,24 @@ public class ChatListener implements Listener, PluginMessageListener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onChatAsync(AsyncPlayerChatEvent e) {
 
+        ChatConfig chatConfig = plugin.getConfigurationManager().getChat();
+
         int nbr_maj = nbr_maj(e.getMessage());
         int nbr_min = nbr_min(e.getMessage());
         double result = (double) (nbr_maj) / nbr_min;
 
 
-        if (!e.getPlayer().hasPermission("fmessage.bypass.flood") && unflood(e.getMessage())) {
+        if (chatConfig.isFloodEnabled() && !e.getPlayer().hasPermission("fmessage.bypass.flood")
+                && unflood(e.getMessage(), chatConfig.getFloodCharRepeat())) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage(plugin.getConfigurationManager().getChat().getFloodFormat());
+            e.getPlayer().sendMessage(chatConfig.getFloodFormat());
         }
 
         if (!e.isCancelled()) {
-            if (!e.getPlayer().hasPermission("fmessage.bypass.spam") && e.getMessage().length() > 3) {
-                if (result > 1) {
-                    e.getPlayer().sendMessage(plugin.getConfigurationManager().getChat().getSpamFormat());
+            if (chatConfig.isSpamEnabled() && !e.getPlayer().hasPermission("fmessage.bypass.spam")
+                    && e.getMessage().length() > chatConfig.getSpamMinLength()) {
+                if (result > chatConfig.getSpamRatio()) {
+                    e.getPlayer().sendMessage(chatConfig.getSpamFormat());
 
                     e.setMessage(e.getMessage().toLowerCase());
                 }
@@ -111,8 +116,10 @@ public class ChatListener implements Listener, PluginMessageListener {
         return compteur;
     }
 
-    private boolean unflood(String msg) {
-        int tolerance = 7;
+    private boolean unflood(String msg, int tolerance) {
+        if (msg.isEmpty() || tolerance <= 0) {
+            return false;
+        }
         char prev = msg.charAt(0);
         int occur = 1;
 
@@ -170,6 +177,19 @@ public class ChatListener implements Listener, PluginMessageListener {
                     }
                 }
                 plugin.getLogger().info(FormatUtil.format(formatWithPlaceholder));
+            } else if (subchannel.equalsIgnoreCase("Sound")) {
+                // BungeeCord has no sound API, so the proxy asks us to play the notification.
+                UUID targetUuid = UUID.fromString(in.readUTF());
+                String soundName = in.readUTF();
+
+                Player target = plugin.getServer().getPlayer(targetUuid);
+                if (target != null) {
+                    try {
+                        target.playSound(target.getLocation(), soundName, 1f, 1f);
+                    } catch (IllegalArgumentException e) {
+                        plugin.getLogger().warning("Invalid notification sound requested by the proxy: " + soundName);
+                    }
+                }
             } else if (subchannel.equalsIgnoreCase("StaffMessage")) {
                 String playerUUID = in.readUTF();
                 String displayName = in.readUTF();
@@ -177,7 +197,7 @@ public class ChatListener implements Listener, PluginMessageListener {
                 TextComponent messageFinalWithoutMessage = StringUtils.format(in.readUTF());
                 String playerMessage = in.readUTF();
 
-                String finalName = StringUtils.isNullOrEmpty(nickName) ? nickName : displayName;
+                String finalName = StringUtils.isNullOrEmpty(nickName) ? displayName : nickName;
 
                 TextComponent messageFinalWithMessage = StringUtils.replace(messageFinalWithoutMessage, "{message}", playerMessage, true);
                 messageFinalWithMessage = StringUtils.replace(messageFinalWithMessage, "{displayName}", finalName, true);

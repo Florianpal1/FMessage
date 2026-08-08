@@ -25,12 +25,11 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
-    - name: Build FMessage with Maven
-      run: mvn -B package -DskipTests=true
+    - name: Build and test FMessage with Maven
+      run: mvn -B verify
     - uses: actions/upload-artifact@v4
       with:
         name: FMessage
         path: |
           FMessageBukkit/target/*.jar
-          FMessageVelocity/target/*.jar
-          FMessageBungee/target/*.jar
+          FMessageProxy/target/*.jar

@@ -34,6 +34,8 @@ public class ConfigurationManager {
 
     private final ChatConfig chat = new ChatConfig();
 
+    private YamlDocument chatConfig;
+
     public ConfigurationManager(File dataFolder) {
 
         try {
@@ -45,7 +47,7 @@ public class ConfigurationManager {
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).setOptionSorting(UpdaterSettings.DEFAULT_OPTION_SORTING).build()
             );
 
-            YamlDocument chatConfig = YamlDocument.create(new File(dataFolder, "config.yml"),
+            chatConfig = YamlDocument.create(new File(dataFolder, "config.yml"),
                     Objects.requireNonNull(getClass().getResourceAsStream("/config.yml")),
                     GeneralSettings.DEFAULT,
                     LoaderSettings.builder().setAutoUpdate(true).build(),
@@ -57,6 +59,19 @@ public class ConfigurationManager {
             chat.load(chatConfig);
             database.load(databaseConfig);
 
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Re-reads config.yml from disk. Used by /fmessage reload.
+     * database.yml is deliberately left alone: the connection pool is built once at startup.
+     */
+    public void reload() {
+        try {
+            chatConfig.reload();
+            chat.load(chatConfig);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
