@@ -1,3 +1,5 @@
+
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -16,9 +18,14 @@ It ships as **two inseparable jars**:
 The Bukkit jar cancels every chat event and forwards it to the proxy: **it does not work on its
 own**. Java 21, MariaDB/MySQL, ACF (Aikar Command Framework) for commands.
 
+Because they are inseparable, they are distributed together: the `FMessageDist` module (no code,
+last in the reactor) packages both into `FMessageDist/target/FMessage-x.x.x.zip` on every
+`package`. The file names inside the zip are pinned by `FMessageDist/src/assembly/dist.xml`.
+
 ## Commands
 
 ```bash
+mvn clean package     # build + FMessageDist/target/FMessage-x.x.x.zip (the two jars)
 mvn clean install     # build + unit tests
 mvn clean verify      # adds PackagingIT, which inspects the shaded jar
 mvn test              # unit tests only
